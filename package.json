@@ -1,0 +1,22 @@
+{
+  "name": "strong-type",
+  "version": "0.0.1",
+  "description": "allows easy type enforcement for all JS types objects and classes. it is also extensible and provides simple to use type checks for your own custom classes and types",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "strong",
+    "type",
+    "validation",
+    "validate",
+    "check",
+    "checking"
+  ],
+  "author": "Brandon Nozaki Miller",
+  "license": "MIT"
+}

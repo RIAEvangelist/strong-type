@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <script async src='./typecheck.js'></script>
+        <style>
+            .true{
+                background-color: green;
+            }
+
+            .false{
+                background-color: red;
+            }
+
+            td{
+              padding:.5em;  
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <template id='supported'>
+            <tr class='${supported}'>
+                <td>
+                    ${js}
+                </td>
+                <td>
+                    ${typeData}
+                </td>
+            </tr>
+        </template>
+
+        <table>
+            <thead>
+                <td>js type/class</td><td>supported?</td>
+            </thead>
+            <tbody id='results'>
+
+            </tbody>
+        </table>
+
+    </body>
+</html>
