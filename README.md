@@ -72,10 +72,11 @@ strongTypeRequired(1,'a',function(){})
 
 
 ```
+#### browser
+![Basic Type Checking Example Web](./docs/img/basicExampleWeb.png)
 
-![](./docs/img/basicExampleWeb.png)
-
-![](./docs/img/basicExampleNode.png)
+#### node
+![Basic Type Checking Example Node](./docs/img/basicExampleNode.png)
 
 ## Example | Generator type checking
 
@@ -166,10 +167,10 @@ try{
 ```
 
 #### browser
-![](./docs/img/generatorExampleWeb.png)
+![Generator Type Checking Example Web](./docs/img/generatorExampleWeb.png)
 
 #### node
-![](./docs/img/generatorExampleNode.png)
+![Generator Type Checking Example Node](./docs/img/generatorExampleNode.png)
 
 ## Date example
 
@@ -185,10 +186,10 @@ is.date(1975);
 ```
 
 #### browser
-![](./docs/img/dateExampleWeb.png)
+![Date Type Checking Example Web](./docs/img/dateExampleWeb.png)
 
 #### node
-![](./docs/img/dateExampleNode.png)
+![Date Type Checking Example Node](./docs/img/dateExampleNode.png)
 
 
 
@@ -208,35 +209,42 @@ You will see some red rows in Firefox as it does not yet support all types. The 
 
 ## Type check methods 
 
-All of these methods take just one arg, the `value` to check. An example : 
+All of these methods take just one arg, the `value` to check. 
 
-|Method|args|
+|Most Common Type Methods|args|
 |-|-|
-|`is.finite`|`value`|
-|`is.NaN`|`value`|
+|`is.globalThis`|`value`|
 |`is.array`|`value`|
-|`is.boolean`|`value`|
 |`is.bigint`|`value`|
+|`is.boolean`|`value`|
 |`is.date`|`value`|
+|`is.finite`|`value`|
 |`is.generator`|`value`|
 |`is.asyncGenerator`|`value`|
-|`is.globalThis`|`value`|
 |`is.infinity`|`value`|
 |`is.map`|`value`|
-|`is.weakMap`|`value`|
+|`is.NaN`|`value`|
+|`is.null`|`value`|
 |`is.number`|`value`|
 |`is.object`|`value`|
 |`is.promise`|`value`|
 |`is.regExp`|`value`|
-|`is.undefined`|`value`|
 |`is.set`|`value`|
-|`is.weakSet`|`value`|
 |`is.string`|`value`|
 |`is.symbol`|`value`|
+|`is.undefined`|`value`|
+|`is.weakMap`|`value`|
+|`is.weakSet`|`value`|
+
+|Function Type Methods|args|
+|-|-|
 |`is.function`|`value`|
 |`is.asyncFunction`|`value`|
 |`is.generatorFunction`|`value`|
 |`is.asyncGeneratorFunction`|`value`|
+
+|Error Type Methods|args|
+|-|-|
 |`is.error`|`value`|
 |`is.evalError`|`value`|
 |`is.rangeError`|`value`|
@@ -244,6 +252,12 @@ All of these methods take just one arg, the `value` to check. An example :
 |`is.syntaxError`|`value`|
 |`is.typeError`|`value`|
 |`is.URIError`|`value`|
+
+|Buffer/Typed Array Type Methods|args|
+|-|-|
+|`is.arrayBuffer`|`value`|
+|`is.dataView`|`value`|
+|`is.sharedArrayBuffer`|`value`|
 |`is.bigInt64Array`|`value`|
 |`is.bigUint64Array`|`value`|
 |`is.float32Array`|`value`|
@@ -255,9 +269,9 @@ All of these methods take just one arg, the `value` to check. An example :
 |`is.uint8ClampedArray`|`value`|
 |`is.uint16Array`|`value`|
 |`is.uint32Array`|`value`|
-|`is.arrayBuffer`|`value`|
-|`is.dataView`|`value`|
-|`is.sharedArrayBuffer`|`value`|
+
+|Intl Type Methods|args|
+|-|-|
 |`is.intlDateTimeFormat`|`value`|
 |`is.intlCollator`|`value`|
 |`is.intlDisplayNames`|`value`|
@@ -266,6 +280,9 @@ All of these methods take just one arg, the `value` to check. An example :
 |`is.intlNumberFormat`|`value`|
 |`is.intlPluralRules`|`value`|
 |`is.intlRelativeTimeFormat`|`value`|
+
+|Garbage Collection Type Methods|args|
+|-|-|
 |`is.finalizationRegistry`|`value`|
 |`is.weakRef`|`value`|
 
@@ -280,3 +297,54 @@ You can use these to directly check your own types / classes Or extend the Is cl
 |`is.instanceCheck`|`value`=`new Fake`, `constructor`=`FakeCore`| The core defaults the args to a `Fake` instance and the `FakeCore` class. This allows unsupported js spec types to fail as expected with a `TypeError` instead of a `Reference` or other Error (see the `./example/web/` example in firefox which is missing some support for `Intl` classes). This method compares `value` with the `constructor` to insure the value is an `instanceof` the constructor. |
 |`is.symbolStringCheck`|`value`, `type`| This can be used to check the `Symbol.toStringTag` it works on all types, but in the core we only use it to check `generator`, `GeneratorFunction`, `async function`, and `async GeneratorFunction` as these have no other way to check their type. A generator ***for example*** has a type of `[object generator]` this way. So you pass in an expected `generator` as `value` and the string `'generator'` as the type, and we handle the rest including lowercasing everything to insure cross browser and platform checking |
 |`is.compare`|`value`, `targetValue`, `typeName`| this will do an explicit compare on the `value` and `targetValue`. In the core, we only use this for JS primitives/constants that have no other way to check such as `Infinity` and `globalThis`. The type name is the string representation of the class type, or a very explicit error string as the only place this arg is ever used is when the `compare` results in a `throws`. |
+
+## Extending the Is class for your own Types
+
+If you are using type checking on your own types in production, its probably wise for yout to just go ahead and extend the module rather than calling the more cumbersome `Core Methods` many times.
+
+#### custom Pizza type
+```javascript
+//custom class type constructor
+class Pizza{
+    constructor(topping){
+        this.eat=true;
+    }
+}
+
+export {default:Pizza, Pizza}
+```
+
+#### extension
+```javascript
+import Is from 'strong-type';
+import Pizza from 'my-delicious-pizza';
+
+class IsMy extends Is{
+    //custom pizza type
+    pizza(value){
+        return this.instanceCheck(value,Pizza);
+    }
+}
+
+export={default:IsMy, IsMy};
+```
+
+#### test
+```javascript
+import IsMy from 'my-delicious-typechecks';
+import Pizza from 'my-delicious-pizza';
+
+const is=new IsMy;
+
+//will throuw because 42 is not a Pizza Type
+//and 
+is.pizza(42)
+
+```
+
+#### browser
+![Pizza Type Checking Example Web](./docs/img/pizzaExampleWeb.png)
+
+#### node
+![Pizza Type Checking Example Node](./docs/img/pizzaExampleNode.png)
+

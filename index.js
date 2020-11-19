@@ -59,7 +59,15 @@ class Is{
     }
 
     NaN(value){
-        return this.compare(value,NaN,'NaN');
+        if(!this.number(value)){
+            return this.number(value);
+        }
+
+        if(isNaN(value)){
+            return true;
+        }
+
+        return this.throw(typeof value, 'NaN');
     }
 
     null(value){
