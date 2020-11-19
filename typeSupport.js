@@ -16,7 +16,12 @@ const types={
     NaN:{
         constructor:undefined,
         supported:undefined,
-        value:undefined  
+        value:NaN  
+    },
+    null:{
+        constructor:undefined,
+        supported:undefined,
+        value:null  
     },
     //common sugar
     array:{

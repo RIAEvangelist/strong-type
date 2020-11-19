@@ -28,12 +28,12 @@ class Is{
         return this.throw(typeof value,type);
     }
 
-    instanceCheck(value=new FakeCore, constructor=Fake){
+    instanceCheck(value=new Fake, constructor=FakeCore){
         //console.log(value,constructor);
         if(value instanceof constructor){
             return true;
         }
-        return this.throw(constructor.name,typeof value);
+        return this.throw(typeof value,constructor.name);
     }
 
     symbolStringCheck(value,type){
@@ -59,10 +59,11 @@ class Is{
     }
 
     NaN(value){
-        if(isNaN(value)){
-            return true;
-        }
-        return this.throw(typeof value, 'NaN');
+        return this.compare(value,NaN,'NaN');
+    }
+
+    null(value){
+        return this.compare(value,null,'null');
     }
 
     //common sugar
