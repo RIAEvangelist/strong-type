@@ -1,4 +1,4 @@
-# Strong-Type
+# strong-type
 
 Type checking module for anywhere javascript can run ES6 modules. This includes node, electron and the browsers.
 
