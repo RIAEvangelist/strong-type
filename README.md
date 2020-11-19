@@ -72,10 +72,10 @@ strongTypeRequired(1,'a',function(){})
 
 ```
 #### browser
-![Basic Type Checking Example Web](./docs/img/basicExampleWeb.png)
+![Basic Type Checking Example Web](https://graw.ithub.com/riaevangelist/strong-type/main/docs/img/basicExampleWeb.PNG)
 
 #### node
-![Basic Type Checking Example Node](./docs/img/basicExampleNode.png)
+![Basic Type Checking Example Node](https://graw.ithub.com/riaevangelist/strong-type/main/docs/img/basicExampleNode.PNG)
 
 ## Example | Generator type checking
 
@@ -166,10 +166,10 @@ try{
 ```
 
 #### browser
-![Generator Type Checking Example Web](./docs/img/generatorExampleWeb.png)
+![Generator Type Checking Example Web](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/generatorExampleWeb.PNG)
 
 #### node
-![Generator Type Checking Example Node](./docs/img/generatorExampleNode.png)
+![Generator Type Checking Example Node](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/generatorExampleNode.PNG)
 
 ## Date example
 
@@ -178,8 +178,10 @@ import Is from 'strong-type';
 
 const is = new Is;
 
+//returns true
 is.date(new Date()); 
 
+//throws in strict or returns false in non-strict
 is.date(1975);
 
 ```
@@ -214,10 +216,10 @@ is.NaN(NaN);
 ```
 
 #### browser
-![Date Type Checking Example Web](./docs/img/dateExampleWeb.png)
+![Date Type Checking Example Web](https://graw.ithub.com/riaevangelist/strong-type/main/docs/img/dateExampleWeb.PNG)
 
 #### node
-![Date Type Checking Example Node](./docs/img/dateExampleNode.png)
+![Date Type Checking Example Node](https://graw.ithub.com/riaevangelist/strong-type/main/docs/img/dateExampleNode.PNG)
 
 
 
@@ -371,8 +373,8 @@ is.pizza(42)
 ```
 
 #### browser
-![Pizza Type Checking Example Web](./docs/img/pizzaExampleWeb.png)
+![Pizza Type Checking Example Web](https://graw.ithub.com/riaevangelist/strong-type/main/docs/img/pizzaExampleWeb.PNG)
 
 #### node
-![Pizza Type Checking Example Node](./docs/img/pizzaExampleNode.png)
+![Pizza Type Checking Example Node](https://graw.ithub.com/riaevangelist/strong-type/main/docs/img/pizzaExampleNode.PNG)
 
