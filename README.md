@@ -72,10 +72,10 @@ strongTypeRequired(1,'a',function(){})
 
 ```
 #### browser
-![Basic Type Checking Example Web](https://graw.ithub.com/riaevangelist/strong-type/main/docs/img/basicExampleWeb.PNG)
+![Basic Type Checking Example Web](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/basicExampleWeb.PNG)
 
 #### node
-![Basic Type Checking Example Node](https://graw.ithub.com/riaevangelist/strong-type/main/docs/img/basicExampleNode.PNG)
+![Basic Type Checking Example Node](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/basicExampleNode.PNG)
 
 ## Example | Generator type checking
 
@@ -216,10 +216,10 @@ is.NaN(NaN);
 ```
 
 #### browser
-![Date Type Checking Example Web](https://graw.ithub.com/riaevangelist/strong-type/main/docs/img/dateExampleWeb.PNG)
+![Date Type Checking Example Web](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/dateExampleWeb.PNG)
 
 #### node
-![Date Type Checking Example Node](https://graw.ithub.com/riaevangelist/strong-type/main/docs/img/dateExampleNode.PNG)
+![Date Type Checking Example Node](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/dateExampleNode.PNG)
 
 
 
@@ -373,8 +373,8 @@ is.pizza(42)
 ```
 
 #### browser
-![Pizza Type Checking Example Web](https://graw.ithub.com/riaevangelist/strong-type/main/docs/img/pizzaExampleWeb.PNG)
+![Pizza Type Checking Example Web](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/pizzaExampleWeb.PNG)
 
 #### node
-![Pizza Type Checking Example Node](https://graw.ithub.com/riaevangelist/strong-type/main/docs/img/pizzaExampleNode.PNG)
+![Pizza Type Checking Example Node](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/pizzaExampleNode.PNG)
 

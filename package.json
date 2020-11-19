@@ -1,6 +1,6 @@
 {
   "name": "strong-type",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "type": "module",
   "description": "allows easy type enforcement for all JS types objects and classes. it is also extensible and provides simple to use type checks for your own custom classes and types",
   "main": "index.js",
