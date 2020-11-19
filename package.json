@@ -1,6 +1,6 @@
 {
   "name": "strong-type",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "type": "module",
   "description": "allows easy type enforcement for all JS types objects and classes. it is also extensible and provides simple to use type checks for your own custom classes and types",
   "main": "index.js",
@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": " node ./node_modules/node-http-server/bin/nhs.js port=8000 verbose=true"
+    "start": "node ./node_modules/node-http-server/bin/nhs.js port=8000 verbose=true",
+    "nodeExample": "node ./example/node/typecheck.js"
   },
   "repository": {
     "type": "git",
