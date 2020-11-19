@@ -3,7 +3,6 @@
 Type checking module for anywhere javascript can run ES6 modules. This includes node, electron and the browsers. Fully isomorphic.
 
 npm strong-type info :  [See npm trends and stats for strong-type](http://npm-stat.com/charts.html?package=strong-type&author=&from=&to=)  
-[![Package Quality](http://npm.packagequality.com/badge/strong-type.png)](http://packagequality.com/#?package=strong-type)  
 ![strong-type npm version](https://img.shields.io/npm/v/strong-type.svg) ![supported node version for strong-type](https://img.shields.io/node/v/strong-type.svg) ![total npm downloads for strong-type](https://img.shields.io/npm/dt/strong-type.svg) ![monthly npm downloads for strong-type](https://img.shields.io/npm/dm/strong-type.svg) ![npm licence for strong-type](https://img.shields.io/npm/l/strong-type.svg)
 
 ` npm install --save strong-type `  
