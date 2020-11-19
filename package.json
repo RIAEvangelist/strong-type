@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "example": ""
+    "start": " node ./node_modules/node-http-server/bin/nhs.js port=8000 verbose=true"
   },
   "repository": {
     "type": "git",
@@ -29,10 +29,8 @@
     "url": "https://github.com/RIAEvangelist/strong-type/issues"
   },
   "homepage": "https://github.com/RIAEvangelist/strong-type#readme",
-  "dependencies": {
-    
-  },
-  "dev": {
+  "dependencies": {},
+  "devDependencies": {
     "node-http-server": "^8.1.3"
   }
 }
