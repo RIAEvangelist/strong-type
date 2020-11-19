@@ -29,7 +29,7 @@ class Is{
     }
 
     instanceCheck(value=new FakeCore, constructor=Fake){
-        console.log(value,constructor);
+        //console.log(value,constructor);
         if(value instanceof constructor){
             return true;
         }

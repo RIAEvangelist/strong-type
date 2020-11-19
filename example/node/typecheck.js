@@ -11,13 +11,8 @@ const modules={
     }
 }
 
-const template=document.querySelector('template').innerHTML;
-const tableBody=document.querySelector('tbody');
-let results='';
-
-
 async function getModules(){
-    for(module in modules){
+    for(let module in modules){
         const {default:moduleDefault} = await import(modules[module].path);
         modules[module].default=moduleDefault;
         modulesImported();
@@ -28,16 +23,15 @@ function modulesImported(){
     is=new modules.Is.default;
     support=modules.support.default;
     for(let type in support){
-        populateTemplate(type,support[type])
+        const green='\x1b[42m%s\x1b';
+        const red='\x1b[41m%s\x1b';
+        console.log(
+            support[type].supported? green:red,
+            `${type} : ${support[type].supported}`
+        );
     }
-    tableBody.innerHTML=results;
-}
 
-function populateTemplate(type,data){
-    //console.log(type,data);
-    results+=template.replace('${js}',type)
-        .replace('${supported}',data.supported)
-        .replace('${typeData}',data.supported);
+    console.log('\x1b[0m');
 }
 
 getModules();
