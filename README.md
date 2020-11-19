@@ -185,6 +185,35 @@ is.date(1975);
 
 ```
 
+## isNaN() vs is.NaN()
+
+Javascripts types are weak by nature, so the built in `isNaN()` function returns true for anything that not a number, but `is.NaN()` only returns true if it is explicitly passed `NaN`.
+
+```js 
+import Is from 'strong-type';
+
+const is = new Is;
+
+//built in JS isNaN
+//returns false
+isNaN(1);
+
+//all return true
+isNaN(NaN);
+isNaN(undefined);
+isNaN('a'); 
+
+//strong-type is.NaN all return false in non-strict mode,
+//or throw in default strict mode
+is.NaN(1);
+is.NaN(undefined);
+is.NaN('a');
+
+//in strong-type only this returns true
+is.NaN(NaN);
+
+```
+
 #### browser
 ![Date Type Checking Example Web](./docs/img/dateExampleWeb.png)
 
