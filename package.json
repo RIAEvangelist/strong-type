@@ -18,5 +18,9 @@
     "checking"
   ],
   "author": "Brandon Nozaki Miller",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RIAEvangelist/strong-type/issues"
+  },
+  "homepage": "https://github.com/RIAEvangelist/strong-type#readme"
 }
