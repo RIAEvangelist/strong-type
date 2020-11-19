@@ -366,7 +366,7 @@ import Pizza from 'my-delicious-pizza';
 
 const is=new IsMy;
 
-//will throuw because 42 is not a Pizza Type
+//will throw because 42 is not a Pizza Type
 //and 
 is.pizza(42)
 
