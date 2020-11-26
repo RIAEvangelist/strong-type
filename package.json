@@ -36,8 +36,8 @@
   "homepage": "https://github.com/RIAEvangelist/strong-type#readme",
   "dependencies": {},
   "devDependencies": {
-    "copyfiles": "^2.4.0",
-    "node-http-server": "^8.1.3",
-    "vanilla-test": "^1.4.2"
+    "copyfiles": "*",
+    "node-http-server": "*",
+    "vanilla-test": "*"
   }
 }
