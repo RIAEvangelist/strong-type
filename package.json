@@ -11,8 +11,9 @@
     "node": ">=13.0.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./node_modules/node-http-server/bin/nhs.js port=8000 verbose=true",
+    "test": "npm run emulate && node ./test/CI.js",
+    "start": "node-http-server port=8000 verbose=true",
+    "emulate": "npm i && copyfiles -V \"./!(node_modules)/*\" \"./**!(node_modules)\"  \"./example/node_modules/strong-type/\" && copyfiles -V \"./node_modules/**/*\" \"./example/\" && copyfiles -V \"./!(node_modules)/*\" \"./**!(node_modules)\"  \"./test/node_modules/strong-type/\" && copyfiles -V \"./node_modules/**/*\" \"./test/\"",
     "nodeExample": "node ./example/node/typecheck.js"
   },
   "repository": {
@@ -35,6 +36,7 @@
   "homepage": "https://github.com/RIAEvangelist/strong-type#readme",
   "dependencies": {},
   "devDependencies": {
-    "node-http-server": "^8.1.3"
+    "node-http-server": "^8.1.3",
+    "strong-type": "^1.4.0"
   }
 }
