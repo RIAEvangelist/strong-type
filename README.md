@@ -12,7 +12,9 @@ npm strong-type info :  [See npm trends and stats for strong-type](http://npm-st
 GitHub info :  
 [![strong-type GitHub Release](https://img.shields.io/github/release/RIAEvangelist/strong-type.svg) ![GitHub license strong-type license](https://img.shields.io/github/license/RIAEvangelist/strong-type.svg) ![open issues for strong-type on GitHub](https://img.shields.io/github/issues/RIAEvangelist/strong-type.svg)](http://riaevangelist.github.io/strong-type/)
 
-[strong-type site](http://riaevangelist.github.io/strong-type/)
+
+Build Info :  
+Travis CI (linux,windows & Mac) : [![Build Status](https://travis-ci.org/RIAEvangelist/strong-test.svg?branch=main)](https://travis-ci.org/RIAEvangelist/strong-test)
 
 ## What does strong-type do?
 `strong-type` allows easy type enforcement for all JS types objects and classes. It is also extensible and provides simple to use type checks for your own custom classes and types should you want to use them.
