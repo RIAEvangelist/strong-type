@@ -12,7 +12,7 @@
   },
   "scripts": {
     "test": "npm run emulate && node ./test/CI.js",
-    "start": "node-http-server port=8000 verbose=true",
+    "start": "npm run emulate && node-http-server port=8000 verbose=true",
     "emulate": "npm i && copyfiles -V \"./!(node_modules)/*\" \"./**!(node_modules)\"  \"./example/node_modules/strong-type/\" && copyfiles -V \"./node_modules/**/*\" \"./example/\" && copyfiles -V \"./!(node_modules)/*\" \"./**!(node_modules)\"  \"./test/node_modules/strong-type/\" && copyfiles -V \"./node_modules/**/*\" \"./test/\"",
     "nodeExample": "node ./example/node/typecheck.js"
   },

@@ -231,13 +231,17 @@ run `npm i` in the root dir of this module to make sure you get the devDependenc
 #### node example :  
 `npm run nodeExample` The whole screen should be green as all of the types are supported in node.
 
-#### browser example
+#### browser examples and tests
 `npm start`  
-this will spin up a `node-http-server` in this modules root on port 8000. The browser examples are in the  `./example/web/` folder, so you can see them by going to this local address : [http://localhost:8000/example/web/index.html](http://localhost:8000/example/web/index.html)
+this will spin up a `node-http-server` in this modules root on port 8000. The browser examples are in the  `./example/web/` folder, and the tests are in `./test/`. You can see them by going to this local address : [http://localhost:8000/](http://localhost:8000/example/web/index.html)
 
 Chrome, Opera, and Edge support all the types so all rows will be green.
 
 You will see some red rows in Firefox as it does not yet support all types. The unsupported types will throw type errors when checked/validated.
+
+#### Digital Ocean Static App
+
+We use the free Digital Ocean Static Apps to host a version of the local server. It is exactly the same as if you ran `npm start` on your machine. You can also use this like a CDN as it automatically rebuilds from main/master each time the branch is updated. [strong-type CDN home](https://strong-type-hiprj.ondigitalocean.app/) : https://strong-type-hiprj.ondigitalocean.app/
 
 ## Type check methods 
 
