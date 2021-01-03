@@ -7,6 +7,7 @@ os:
 #node versions
 language: node_js
 node_js:
+  - 12
   - 13
   - 14
   - 15

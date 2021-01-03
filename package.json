@@ -1,6 +1,6 @@
 {
   "name": "strong-type",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "type": "module",
   "description": "allows easy type enforcement for all JS types objects and classes. it is also extensible and provides simple to use type checks for your own custom classes and types",
   "main": "index.js",
@@ -8,7 +8,7 @@
     "example": "example"
   },
   "engines": {
-    "node": ">=13.0.0"
+    "node": ">=12.0.0"
   },
   "scripts": {
     "test": "npm run emulate && node ./test/CI.js",
