@@ -241,7 +241,7 @@ You will see some red rows in Firefox as it does not yet support all types. The 
 
 #### Digital Ocean Static App
 
-We use the free Digital Ocean Static Apps to host a version of the local server. It is exactly the same as if you ran `npm start` on your machine. You can also use this like a CDN as it automatically rebuilds from main/master each time the branch is updated. [strong-type CDN home](https://strong-type-hiprj.ondigitalocean.app/) : https://strong-type-hiprj.ondigitalocean.app/
+We use the free Digital Ocean Static Apps to host a version of the local server. It is exactly the same as if you ran `npm start` on your machine. You can also use this like a CDN as it automatically rebuilds from main/master each time the branch is updated. [strong-type CDN home](https://cdn-p939v.ondigitalocean.app/strong-type/) : https://cdn-p939v.ondigitalocean.app/strong-type/
 
 ## Type check methods 
 
