@@ -51,6 +51,99 @@ is.string(1);
 
 ```
 
+## Type check methods 
+
+All of these methods take just one arg, the `value` to check. 
+
+|Most Common Type Methods|args|
+|-|-|
+|`is.globalThis`|`value`|
+|`is.array`|`value`|
+|`is.bigint`|`value`|
+|`is.boolean`|`value`|
+|`is.date`|`value`|
+|`is.finite`|`value`|
+|`is.generator`|`value`|
+|`is.asyncGenerator`|`value`|
+|`is.infinity`|`value`|
+|`is.map`|`value`|
+|`is.NaN`|`value`|
+|`is.null`|`value`|
+|`is.number`|`value`|
+|`is.object`|`value`|
+|`is.promise`|`value`|
+|`is.regExp`|`value`|
+|`is.set`|`value`|
+|`is.string`|`value`|
+|`is.symbol`|`value`|
+|`is.undefined`|`value`|
+|`is.weakMap`|`value`|
+|`is.weakSet`|`value`|
+
+|Function Type Methods|args|
+|-|-|
+|`is.function`|`value`|
+|`is.asyncFunction`|`value`|
+|`is.generatorFunction`|`value`|
+|`is.asyncGeneratorFunction`|`value`|
+
+|Error Type Methods|args|
+|-|-|
+|`is.error`|`value`|
+|`is.evalError`|`value`|
+|`is.rangeError`|`value`|
+|`is.referenceError`|`value`|
+|`is.syntaxError`|`value`|
+|`is.typeError`|`value`|
+|`is.URIError`|`value`|
+
+|Buffer/Typed Array Type Methods|args|
+|-|-|
+|`is.arrayBuffer`|`value`|
+|`is.dataView`|`value`|
+|`is.sharedArrayBuffer`|`value`|
+|`is.bigInt64Array`|`value`|
+|`is.bigUint64Array`|`value`|
+|`is.float32Array`|`value`|
+|`is.float64Array`|`value`|
+|`is.int8Array`|`value`|
+|`is.int16Array`|`value`|
+|`is.int32Array`|`value`|
+|`is.uint8Array`|`value`|
+|`is.uint8ClampedArray`|`value`|
+|`is.uint16Array`|`value`|
+|`is.uint32Array`|`value`|
+
+|Intl Type Methods|args|
+|-|-|
+|`is.intlDateTimeFormat`|`value`|
+|`is.intlCollator`|`value`|
+|`is.intlDisplayNames`|`value`|
+|`is.intlListFormat`|`value`|
+|`is.intlLocale`|`value`|
+|`is.intlNumberFormat`|`value`|
+|`is.intlPluralRules`|`value`|
+|`is.intlRelativeTimeFormat`|`value`|
+
+|Garbage Collection Type Methods|args|
+|-|-|
+|`is.finalizationRegistry`|`value`|
+|`is.weakRef`|`value`|
+
+## Core methods 
+
+You can use these to directly check your own types / classes Or extend the Is class to add your own methods in which you use these for checking more types, especially custom types and classes.
+
+|Method|args|description|
+|-|-|-|
+|`is.throw`|`valueType`, `expectedType`| this will use the valueType and expectedValueType to create and throw a new `TypeError` |
+|`is.typeCheck`|`value`, `type`| this will check the javascript spec types returned from `typeof`. So the `type` arg would be a string of `'string'`, `'boolean'`, `'number'`, `'object'`, `'undefined'`, `'bigint'` etc. |
+|`is.instanceCheck`|`value`=`new Fake`, `constructor`=`FakeCore`| The core defaults the args to a `Fake` instance and the `FakeCore` class. This allows unsupported js spec types to fail as expected with a `TypeError` instead of a `Reference` or other Error (see the `./example/web/` example in firefox which is missing some support for `Intl` classes). This method compares `value` with the `constructor` to insure the value is an `instanceof` the constructor. |
+|`is.symbolStringCheck`|`value`, `type`| This can be used to check the `Symbol.toStringTag` it works on all types, but in the core we only use it to check `generator`, `GeneratorFunction`, `async function`, and `async GeneratorFunction` as these have no other way to check their type. A generator ***for example*** has a type of `[object generator]` this way. So you pass in an expected `generator` as `value` and the string `'generator'` as the type, and we handle the rest including lowercasing everything to insure cross browser and platform checking |
+|`is.compare`|`value`, `targetValue`, `typeName`| this will do an explicit compare on the `value` and `targetValue`. In the core, we only use this for JS primitives/constants that have no other way to check such as `Infinity` and `globalThis`. The type name is the string representation of the class type, or a very explicit error string as the only place this arg is ever used is when the `compare` results in a `throws`. |
+
+
+
 ## Example | Basic type checking
 
 `strong-type` is intended to be very simple to use.
@@ -243,96 +336,6 @@ You will see some red rows in Firefox as it does not yet support all types. The 
 
 We use the free Digital Ocean Static Apps to host a version of the local server. It is exactly the same as if you ran `npm start` on your machine. You can also use this like a CDN as it automatically rebuilds from main/master each time the branch is updated. [strong-type CDN home](https://cdn-p939v.ondigitalocean.app/strong-type/) : https://cdn-p939v.ondigitalocean.app/strong-type/
 
-## Type check methods 
-
-All of these methods take just one arg, the `value` to check. 
-
-|Most Common Type Methods|args|
-|-|-|
-|`is.globalThis`|`value`|
-|`is.array`|`value`|
-|`is.bigint`|`value`|
-|`is.boolean`|`value`|
-|`is.date`|`value`|
-|`is.finite`|`value`|
-|`is.generator`|`value`|
-|`is.asyncGenerator`|`value`|
-|`is.infinity`|`value`|
-|`is.map`|`value`|
-|`is.NaN`|`value`|
-|`is.null`|`value`|
-|`is.number`|`value`|
-|`is.object`|`value`|
-|`is.promise`|`value`|
-|`is.regExp`|`value`|
-|`is.set`|`value`|
-|`is.string`|`value`|
-|`is.symbol`|`value`|
-|`is.undefined`|`value`|
-|`is.weakMap`|`value`|
-|`is.weakSet`|`value`|
-
-|Function Type Methods|args|
-|-|-|
-|`is.function`|`value`|
-|`is.asyncFunction`|`value`|
-|`is.generatorFunction`|`value`|
-|`is.asyncGeneratorFunction`|`value`|
-
-|Error Type Methods|args|
-|-|-|
-|`is.error`|`value`|
-|`is.evalError`|`value`|
-|`is.rangeError`|`value`|
-|`is.referenceError`|`value`|
-|`is.syntaxError`|`value`|
-|`is.typeError`|`value`|
-|`is.URIError`|`value`|
-
-|Buffer/Typed Array Type Methods|args|
-|-|-|
-|`is.arrayBuffer`|`value`|
-|`is.dataView`|`value`|
-|`is.sharedArrayBuffer`|`value`|
-|`is.bigInt64Array`|`value`|
-|`is.bigUint64Array`|`value`|
-|`is.float32Array`|`value`|
-|`is.float64Array`|`value`|
-|`is.int8Array`|`value`|
-|`is.int16Array`|`value`|
-|`is.int32Array`|`value`|
-|`is.uint8Array`|`value`|
-|`is.uint8ClampedArray`|`value`|
-|`is.uint16Array`|`value`|
-|`is.uint32Array`|`value`|
-
-|Intl Type Methods|args|
-|-|-|
-|`is.intlDateTimeFormat`|`value`|
-|`is.intlCollator`|`value`|
-|`is.intlDisplayNames`|`value`|
-|`is.intlListFormat`|`value`|
-|`is.intlLocale`|`value`|
-|`is.intlNumberFormat`|`value`|
-|`is.intlPluralRules`|`value`|
-|`is.intlRelativeTimeFormat`|`value`|
-
-|Garbage Collection Type Methods|args|
-|-|-|
-|`is.finalizationRegistry`|`value`|
-|`is.weakRef`|`value`|
-
-## Core methods 
-
-You can use these to directly check your own types / classes Or extend the Is class to add your own methods in which you use these for checking more types, especially custom types and classes.
-
-|Method|args|description|
-|-|-|-|
-|`is.throw`|`valueType`, `expectedType`| this will use the valueType and expectedValueType to create and throw a new `TypeError` |
-|`is.typeCheck`|`value`, `type`| this will check the javascript spec types returned from `typeof`. So the `type` arg would be a string of `'string'`, `'boolean'`, `'number'`, `'object'`, `'undefined'`, `'bigint'` etc. |
-|`is.instanceCheck`|`value`=`new Fake`, `constructor`=`FakeCore`| The core defaults the args to a `Fake` instance and the `FakeCore` class. This allows unsupported js spec types to fail as expected with a `TypeError` instead of a `Reference` or other Error (see the `./example/web/` example in firefox which is missing some support for `Intl` classes). This method compares `value` with the `constructor` to insure the value is an `instanceof` the constructor. |
-|`is.symbolStringCheck`|`value`, `type`| This can be used to check the `Symbol.toStringTag` it works on all types, but in the core we only use it to check `generator`, `GeneratorFunction`, `async function`, and `async GeneratorFunction` as these have no other way to check their type. A generator ***for example*** has a type of `[object generator]` this way. So you pass in an expected `generator` as `value` and the string `'generator'` as the type, and we handle the rest including lowercasing everything to insure cross browser and platform checking |
-|`is.compare`|`value`, `targetValue`, `typeName`| this will do an explicit compare on the `value` and `targetValue`. In the core, we only use this for JS primitives/constants that have no other way to check such as `Infinity` and `globalThis`. The type name is the string representation of the class type, or a very explicit error string as the only place this arg is ever used is when the `compare` results in a `throws`. |
 
 ## Extending the Is class for your own Types
 
