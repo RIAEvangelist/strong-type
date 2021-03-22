@@ -168,7 +168,7 @@ try{
 cleanup();
 
 try{
-    basic('',);    
+    basic('string','test');    
 }catch(e){
     fail(e);
 }
