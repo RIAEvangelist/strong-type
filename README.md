@@ -16,7 +16,7 @@ GitHub info :
 Build Info :  
 GitHub Action CI (linux,windows & Mac) : ![Build Status](https://github.com/RIAEvangelist/strong-type/actions/workflows/node.js.yml/badge.svg)
 
-![Coverage Status](https://github.com/RIAEvangelist/strong-type/coverage/lcov.svg)
+![Coverage Status](./coverage/lcov.svg)
 
 
 
