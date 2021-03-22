@@ -189,47 +189,96 @@ try{
 }
 cleanup();
 
-// try{
-//     basic('',);    
-// }catch(e){
-//     fail(e);
-// }
-// cleanup();
+try{
+    basic('weakMap',new WeakMap());    
+}catch(e){
+    fail(e);
+}
+cleanup();
 
-// try{
-//     basic('',);    
-// }catch(e){
-//     fail(e);
-// }
-// cleanup();
+try{
+    basic('weakSet',new WeakSet());    
+}catch(e){
+    fail(e);
+}
+cleanup();
 
-// try{
-//     basic('',);    
-// }catch(e){
-//     fail(e);
-// }
-// cleanup();
+try{
+    basic('function',()=>{});    
+}catch(e){
+    fail(e);
+}
+cleanup();
 
-// try{
-//     basic('',);    
-// }catch(e){
-//     fail(e);
-// }
-// cleanup();
+try{
+    basic('asyncFunction', async ()=>{});    
+}catch(e){
+    fail(e);
+}
+cleanup();
 
-// try{
-//     basic('',);    
-// }catch(e){
-//     fail(e);
-// }
-// cleanup();
+try{
+    basic('generatorFunction',function*(){});    
+}catch(e){
+    fail(e);
+}
+cleanup();
 
-// try{
-//     basic('',);    
-// }catch(e){
-//     fail(e);
-// }
-// cleanup();
+try{
+    basic('asyncGeneratorFunction',async function*(){});    
+}catch(e){
+    fail(e);
+}
+cleanup();
+
+try{
+    basic('error',new Error);    
+}catch(e){
+    fail(e);
+}
+cleanup();
+
+try{
+    basic('evalError',new EvalError);    
+}catch(e){
+    fail(e);
+}
+cleanup();
+
+try{
+    basic('rangeError',new RangeError);    
+}catch(e){
+    fail(e);
+}
+cleanup();
+
+try{
+    basic('referenceError',new ReferenceError);    
+}catch(e){
+    fail(e);
+}
+cleanup();
+
+try{
+    basic('syntaxError',new SyntaxError);    
+}catch(e){
+    fail(e);
+}
+cleanup();
+
+try{
+    basic('typeError',new TypeError);    
+}catch(e){
+    fail(e);
+}
+cleanup();
+
+try{
+    basic('URIError',new URIError);    
+}catch(e){
+    fail(e);
+}
+cleanup();
 
 // try{
 //     basic('',);    
