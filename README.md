@@ -14,10 +14,16 @@ GitHub info :
 
 
 Build Info :  
-Travis CI (linux,windows & Mac) : [![Build Status](https://travis-ci.org/RIAEvangelist/strong-test.svg?branch=main)](https://travis-ci.org/RIAEvangelist/strong-test)
+GitHub Action CI (linux,windows & Mac) : ![Build Status](https://github.com/RIAEvangelist/strong-type/actions/workflows/node.js.yml/badge.svg)
 
 ## What does strong-type do?
 `strong-type` allows easy type enforcement for all JS types objects and classes. It is also extensible and provides simple to use type checks for your own custom classes and types should you want to use them.
+
+## Testing and Coverage
+
+`string-type` is tested using [`vanilla-test`](https://github.com/RIAEvangelist/vanilla-test) which is a bare bones testing framework for js that supports ESM, and covered by [`C8`](https://github.com/bcoe/c8) which is the default coverage tool built into the node runtime. This pair is the most effective and accurate way to test ES6+ modules.
+
+Run the tests and build the coverage files on your local machine by running `node-test` or see the coverage files on the [strong-type CDN home](https://cdn-p939v.ondigitalocean.app/strong-type/) : https://cdn-p939v.ondigitalocean.app/strong-type/ 
 
 ## Example | strict vs. non-strict
 
@@ -37,6 +43,10 @@ const is = new Is(true);
 
 //throws
 is.string(1);
+
+//union or multiple possible types
+//should not throw
+is.union(1,'string|number');
 ```
 
 #### non-strict
@@ -49,11 +59,21 @@ const is = new Is(false);
 //returns false
 is.string(1);
 
+//union or multiple possible types
+//should return true
+is.union(1,'string|number');
+
 ```
 
 ## Type check methods 
 
 All of these methods take just one arg, the `value` to check. 
+
+Unions can join any of the types supported by `Is`.
+
+|Union|args|
+|-|-|
+|`is.union`|`value`,`pipe\|seperated\|type\|list`|
 
 |Most Common Type Methods|args|
 |-|-|
@@ -143,7 +163,6 @@ You can use these to directly check your own types / classes Or extend the Is cl
 |`is.compare`|`value`, `targetValue`, `typeName`| this will do an explicit compare on the `value` and `targetValue`. In the core, we only use this for JS primitives/constants that have no other way to check such as `Infinity` and `globalThis`. The type name is the string representation of the class type, or a very explicit error string as the only place this arg is ever used is when the `compare` results in a `throws`. |
 
 
-
 ## Example | Basic type checking
 
 `strong-type` is intended to be very simple to use.
@@ -160,9 +179,17 @@ function strongTypeRequired(aNumber,aString,anAsyncFunction){
     is.asyncFunction(anAsyncFunction);
 }
 
+function unionStrongTypeRequired(aNumberOrString){
+    is.union(aNumberOrString,'number|string');
+}
+
 
 //this will throw because we do not pass an async Function, but rather a normal function.
 strongTypeRequired(1,'a',function(){})
+
+//these will both pass because we accept both types in a union for the first param. 
+unionStrongTypeRequired(1);
+unionStrongTypeRequired('a');
 
 
 ```
@@ -324,9 +351,9 @@ run `npm i` in the root dir of this module to make sure you get the devDependenc
 #### node example :  
 `npm run nodeExample` The whole screen should be green as all of the types are supported in node.
 
-#### browser examples and tests
+#### browser examples and support tests
 `npm start`  
-this will spin up a `node-http-server` in this modules root on port 8000. The browser examples are in the  `./example/web/` folder, and the tests are in `./test/`. You can see them by going to this local address : [http://localhost:8000/](http://localhost:8000/example/web/index.html)
+this will spin up a `node-http-server` in this modules root on port 8000. The browser examples are in the  `./example/web/` folder. You can see them by going to this local address : [http://localhost:8000/](http://localhost:8000/example/web/index.html)
 
 Chrome, Opera, and Edge support all the types so all rows will be green.
 

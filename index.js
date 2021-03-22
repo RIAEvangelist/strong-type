@@ -83,7 +83,7 @@ class Is{
         return this.typeCheck(value,'boolean');
     }
 
-    bigint(value){
+    bigInt(value){
         return this.typeCheck(value,'bigint');
     }
 
@@ -133,6 +133,30 @@ class Is{
     
     undefined(value){
         return this.typeCheck(value,'undefined');
+    }
+
+    union(value,typesString){
+        const types=typesString.split('|');
+        const weakIs=new Is(false);
+        let pass=false;
+        let type='undefined';
+        for(type of types){
+            try{
+                if(weakIs[type](value)){
+                    pass=true;
+                    break;
+                }
+            }catch(err){
+                return this.throw(type,'a method of strong-type');
+            }
+        }
+
+        if(pass){
+           return this[type](value);
+        }
+
+        return this.throw(typeof value, types.join('|'));
+
     }
 
     set(value){

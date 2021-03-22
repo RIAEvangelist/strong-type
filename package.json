@@ -1,6 +1,6 @@
 {
   "name": "strong-type",
-  "version": "0.1.6",
+  "version": "1.0.0",
   "type": "module",
   "description": "allows easy type enforcement for all JS types objects and classes. it is also extensible and provides simple to use type checks for your own custom classes and types",
   "main": "index.js",
@@ -11,9 +11,9 @@
     "node": ">=12.0.0"
   },
   "scripts": {
-    "test": "npm run emulate && node ./test/CI.js",
+    "test": "node ./test/CI.js",
     "start": "npm run emulate && node-http-server port=8000 verbose=true",
-    "emulate": "npm i && copyfiles -V \"./!(node_modules)/*\" \"./**!(node_modules)\"  \"./example/node_modules/strong-type/\" && copyfiles -V \"./node_modules/**/*\" \"./example/\" && copyfiles -V \"./!(node_modules)/*\" \"./**!(node_modules)\"  \"./test/node_modules/strong-type/\" && copyfiles -V \"./node_modules/**/*\" \"./test/\"",
+    "emulate": "npm i && copyfiles -V \"./!(node_modules)/*\" \"./**!(node_modules)\"  \"./example/node_modules/strong-type/\" && copyfiles -V \"./node_modules/**/*\" \"./example/\" && copyfiles -V \"./!(node_modules)/*\" \"./**!(node_modules)\"",
     "nodeExample": "node ./example/node/typecheck.js"
   },
   "repository": {
