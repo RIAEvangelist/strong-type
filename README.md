@@ -23,7 +23,9 @@ Build Info, GitHub Action CI (linux,windows & Mac) :
 
 
 ## What does strong-type do?
-`strong-type` allows easy type enforcement for all JS types objects and classes. It is also extensible and provides simple to use type checks for your own custom classes and types should you want to use them.
+`strong-type` allows easy type enforcement for all JS types objects and classes. It also supports `type unions` for multiple types, as well as special types like `.any` and `.defined`. It is also extensible and provides simple to use type checks for your own custom classes and types should you want to use them.
+
+It does all this without requiring any additional tooling or transpiling. This leaves you or your organization free to use whatever toolchain or framework you want, or even... to write vanilla native JS.
 
 ## Testing and Coverage
 
