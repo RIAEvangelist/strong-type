@@ -1,6 +1,6 @@
 # strong-type
 
-## Strongly Typed native JS without a hard requirement for translpiling.
+## Strongly Typed native JS without a hard requirement for transpiling.
 
 What TypeScript should have been. `strong-type` will also work in TypeScript.
 
