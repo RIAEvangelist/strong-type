@@ -7,8 +7,8 @@ const cleanup=function(){
     test.done();
 }
 
-const fail=function(e){
-    console.trace(e)
+const fail=function(err){
+    console.trace(err)
     test.fail();
 }
 
@@ -21,8 +21,8 @@ const basic=function(key,value){
 
 // try{
 //     basic('',);    
-// }catch(e){
-//     fail(e);
+// }catch(err){
+//     fail(err);
 // }
 // cleanup();
 
@@ -32,52 +32,52 @@ const basic=function(key,value){
 // try{
 //    test.expects(``);
 //    is.();   
-// }catch(e){
-//     fail(e);
+// }catch(err){
+//     fail(err);
 // }
 // cleanup();
 
 try{
     basic('globalThis',global);    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     test.expects(`is.array([]);`);
     is.array([]);
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('bigInt',1n);    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('boolean',false);    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
    test.expects(`is.date(new Date);`);
    is.date(new Date);   
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('finite',1);   
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
@@ -91,8 +91,8 @@ try{
     const generatorFunction=function*(){};
     const generator=generatorFunction();
     is.generator(generator);  
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
@@ -106,202 +106,299 @@ try{
     const asyncGeneratorFunction=async function*(){};
     const asyncGenerator=asyncGeneratorFunction();
     is.asyncGenerator(asyncGenerator);  
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('infinity',Infinity);    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('map',new Map);
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('NaN',NaN);
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('number',1);    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('object',{});    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('promise',(async ()=>{})());    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('regExp',/test/ig);    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('set',new Set);    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('string','test');    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     test.expects(`is.symbol(Symbol());`);
     is.symbol(Symbol());
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('undefined');    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('weakMap',new WeakMap());    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('weakSet',new WeakSet());    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('function',()=>{});    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('asyncFunction', async ()=>{});    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('generatorFunction',function*(){});    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('asyncGeneratorFunction',async function*(){});    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('error',new Error);    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('evalError',new EvalError);    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('rangeError',new RangeError);    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('referenceError',new ReferenceError);    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('syntaxError',new SyntaxError);    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('typeError',new TypeError);    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
 try{
     basic('URIError',new URIError);    
-}catch(e){
-    fail(e);
+}catch(err){
+    fail(err);
 }
 cleanup();
 
-// try{
-//     basic('',);    
-// }catch(e){
-//     fail(e);
-// }
-// cleanup();
+try{
+    basic('dataView',new DataView(new ArrayBuffer));    
+}catch(err){
+    fail(err);
+}
+cleanup();
 
-// try{
-//     basic('',);    
-// }catch(e){
-//     fail(e);
-// }
-// cleanup();
+try{
+    basic('sharedArrayBuffer',new SharedArrayBuffer);    
+}catch(err){
+    fail(err);
+}
+cleanup();
 
-// try{
-//     basic('',);    
-// }catch(e){
-//     fail(e);
-// }
-// cleanup();
+try{
+    test.expects(`is.bigInt64Array(new BigInt64Array);`);
+    is.bigInt64Array(new BigInt64Array);
+}catch(err){
+    fail(err);
+}
+cleanup();
 
+try{
+    test.expects(`is.bigUint64Array(new BigUint64Array);`);
+    is.bigUint64Array(new BigUint64Array);
+}catch(err){
+    fail(err);
+}
+cleanup();
 
+try{
+    test.expects(`is.float32Array(new Float32Array);`);
+    is.float32Array(new Float32Array);
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+    test.expects(`is.float64Array(new Float64Array);`);
+    is.float64Array(new Float64Array);
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+    test.expects(`is.int8Array(new Int8Array);`);
+    is.int8Array(new Int8Array);
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+    test.expects(`is.int16Array(new Int16Array);`);
+    is.int16Array(new Int16Array);
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+    test.expects(`is.int32Array(new Int32Array);`);
+    is.int32Array(new Int32Array);
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+    test.expects(`is.uint8Array(new Uint8Array);`);
+    is.uint8Array(new Uint8Array);
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+    test.expects(`is.uint8ClampedArray(new Uint8ClampedArray);`);
+    is.uint8ClampedArray(new Uint8ClampedArray);
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+    test.expects(`is.uint16Array(new Uint16Array);`);
+    is.uint16Array(new Uint16Array);
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+    test.expects(`is.uint32Array(new Uint32Array);`);
+    is.uint32Array(new Uint32Array);
+}catch(err){
+    fail(err);
+}
+cleanup();
 
 
 test.report();
+
+// try{
+//     basic('',);    
+// }catch(err){
+//     fail(err);
+// }
+// cleanup();
+
+//hand writtenbasic test template
+//used to log out human readable test
+
+// try{
+//    test.expects(``);
+//    is.();   
+// }catch(err){
+//     fail(err);
+// }
+// cleanup();
