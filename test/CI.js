@@ -17,6 +17,10 @@ const basic=function(key,value){
     is[key](value);
 }
 
+const skip=function(key,missing){
+    console.log(`Skipping 'is.${key}' because ${missing} is not supported in this JS env.`);
+}
+
 //basic test template
 
 // try{
@@ -394,7 +398,6 @@ try{
     test.expects(`is.intlCollator(new Intl.Collator);`);
     is.intlCollator(new Intl.Collator);
 }catch(err){
-    console.log(13);
     fail(err);
 }
 cleanup();
@@ -405,7 +408,7 @@ try{
     if(weakIs.exists(Intl.DisplayNames)){
         is.intlDisplayNames(new Intl.DisplayNames);   
     }else{
-        console.log(`Skipping 'is.intlDisplayNames(new Intl.DisplayNames);' because Intl.DisplayNames is not supported in this version of node.`);
+        skip('intlDisplayNames','Intl.DisplayNames');
     }
 }catch(err){
     fail(err);
@@ -452,8 +455,34 @@ try{
 }
 cleanup();
 
+try{
+    const weakIs=new Is(false);
+    test.expects(`is.finalizationRegistry(new FinalizationRegistry(() => {}));`);
+    if(weakIs.exists(global.FinalizationRegistry)){
+        is.finalizationRegistry(new FinalizationRegistry(() => {}));    
+    }else{
+        skip('finalizationRegistry','FinalizationRegistry')
+    }
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+    const weakIs=new Is(false);
+    test.expects(`is.weakRef(new WeakRef({})); `);
+    if(weakIs.exists(global.WeakRef)){
+        is.weakRef(new WeakRef({}));    
+    }else{
+        skip('weakRef','WeakRef')
+    }    
+}catch(err){
+    fail(err);
+}
+cleanup();
 
 test.report();
+
 
 // try{
 //     basic('',);    

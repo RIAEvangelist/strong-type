@@ -35,7 +35,6 @@
     "url": "https://github.com/RIAEvangelist/strong-type/issues"
   },
   "homepage": "https://github.com/RIAEvangelist/strong-type#readme",
-  "dependencies": {},
   "devDependencies": {
     "c8": "^7.6.0",
     "copyfiles": "*",
