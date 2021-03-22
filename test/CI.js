@@ -481,6 +481,61 @@ try{
 }
 cleanup();
 
+try{
+    test.expects(`is.throw('x','y'); to throw.`);
+    is.throw('x','y');
+    test.fail();   
+}catch(err){
+    console.trace(err);
+}
+cleanup();
+
+try{
+    test.expects(`is.compare(1,1);`);
+    is.compare(1,1);    
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+    test.expects(`
+        is.defined(global);
+        is.any(global);
+        is.exists(global);
+    `);
+    
+    is.defined(global);
+    is.any(global);
+    is.exists(global);    
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+    test.expects(`
+        is.union('a','string|number');
+        is.union(1,'string|number');   
+    `);
+    is.union('a','string|number');
+    is.union(1,'string|number');   
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+
+try{
+    test.expects(`is.union({},'string|number'); to throw`);
+    is.union({},'string|number');
+    
+    test.fail();
+}catch(err){
+    console.trace(err);
+}
+cleanup();
+
 test.report();
 
 
