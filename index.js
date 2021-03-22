@@ -63,6 +63,10 @@ class Is{
         return this.defined(value);
     }
 
+    exists(value){
+        return this.defined(value);
+    }
+
     union(value,typesString){
         const types=typesString.split('|');
         const weakIs=new Is(false);

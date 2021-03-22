@@ -178,6 +178,7 @@ You can use these to directly check your own types / classes Or extend the Is cl
 |`is.compare`|`value`, `targetValue`, `typeName`| this will do an explicit compare on the `value` and `targetValue`. In the core, we only use this for JS primitives/constants that have no other way to check such as `Infinity` and `globalThis`. The type name is the string representation of the class type, or a very explicit error string as the only place this arg is ever used is when the `compare` results in a `throws`. |
 |`is.defined`|`value`| this will check that a value is not `is.undefined` any type is valid except `undefined`. |
 |`is.any`|`value`| this is an alias to `is.defined` which will allow any type except `undefined`.|
+|`is.exists`|`value`| this is an alias to `is.defined` to determine if something exists. Very useful for feature testing. The alias was created for simplicity and transparency.|
 
 
 ## Example | Basic type checking

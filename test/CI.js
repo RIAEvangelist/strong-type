@@ -382,6 +382,76 @@ try{
 }
 cleanup();
 
+try{
+    test.expects(`is.intlDateTimeFormat(new Intl.DateTimeFormat);`);
+    is.intlDateTimeFormat(new Intl.DateTimeFormat);    
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+    test.expects(`is.intlCollator(new Intl.Collator);`);
+    is.intlCollator(new Intl.Collator);
+}catch(err){
+    console.log(13);
+    fail(err);
+}
+cleanup();
+
+try{
+    const weakIs=new Is(false);
+    test.expects(`is.intlDisplayNames(new Intl.DisplayNames);`);
+    if(weakIs.exists(Intl.DisplayNames)){
+        is.intlDisplayNames(new Intl.DisplayNames);   
+    }else{
+        console.log(`Skipping 'is.intlDisplayNames(new Intl.DisplayNames);' because Intl.DisplayNames is not supported in this version of node.`);
+    }
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+    test.expects(`is.intlListFormat(new Intl.ListFormat);`);
+    is.intlListFormat(new Intl.ListFormat);   
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+   test.expects(`is.intlLocale(new Intl.Locale('ja-Jpan-JP-u-ca-japanese-hc-h12'));`);
+   is.intlLocale(new Intl.Locale('ja-Jpan-JP-u-ca-japanese-hc-h12'));   
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+   test.expects(`is.intlNumberFormat(new Intl.NumberFormat);`);
+   is.intlNumberFormat(new Intl.NumberFormat);   
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+   test.expects(`is.intlPluralRules(new Intl.PluralRules);`);
+   is.intlPluralRules(new Intl.PluralRules);
+}catch(err){
+    fail(err);
+}
+cleanup();
+
+try{
+   test.expects(`is.intlRelativeTimeFormat(new Intl.RelativeTimeFormat);`);
+   is.intlRelativeTimeFormat(new Intl.RelativeTimeFormat);   
+}catch(err){
+    fail(err);
+}
+cleanup();
+
 
 test.report();
 
