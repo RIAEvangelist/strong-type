@@ -17,17 +17,14 @@ jobs:
           - macos-latest
           - windows-latest
         node_version:
-          - 10
-          - 12
-          - 14
-        architecture:
-          - x64
+          - 12.x
+          - 14.x
+          - 15.x
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node_version }}
-          architecture: ${{ matrix.architecture }}
       - run: npm ci
       - run: npm test
 
