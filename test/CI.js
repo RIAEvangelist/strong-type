@@ -406,7 +406,7 @@ try{
     const weakIs=new Is(false);
     test.expects(`is.intlDisplayNames(new Intl.DisplayNames);`);
     if(weakIs.exists(Intl.DisplayNames)){
-        is.intlDisplayNames(new Intl.DisplayNames);   
+        is.intlDisplayNames(new Intl.DisplayNames(['en'], { type: 'region' }));   
     }else{
         skip('intlDisplayNames','Intl.DisplayNames');
     }
