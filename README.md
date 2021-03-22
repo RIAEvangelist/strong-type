@@ -16,6 +16,10 @@ GitHub info :
 Build Info :  
 GitHub Action CI (linux,windows & Mac) : ![Build Status](https://github.com/RIAEvangelist/strong-type/actions/workflows/node.js.yml/badge.svg)
 
+![Coverage Status](https://github.com/RIAEvangelist/strong-type/coverage/lcov.svg)
+
+
+
 ## What does strong-type do?
 `strong-type` allows easy type enforcement for all JS types objects and classes. It is also extensible and provides simple to use type checks for your own custom classes and types should you want to use them.
 

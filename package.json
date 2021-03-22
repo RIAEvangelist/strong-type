@@ -11,11 +11,16 @@
     "node": ">=12.0.0"
   },
   "scripts": {
-    "test": "node ./test/CI.js",
+    "test": "npm i && c8 -r lcov -r html node test/CI.js && c8 report && node ./lcov.js",
     "start": "npm run emulate && node-http-server port=8000 verbose=true",
     "emulate": "npm i && copyfiles -V \"./!(node_modules)/*\" \"./**!(node_modules)\"  \"./example/node_modules/strong-type/\" && copyfiles -V \"./node_modules/**/*\" \"./example/\" && copyfiles -V \"./!(node_modules)/*\" \"./**!(node_modules)\"",
-    "nodeExample": "node ./example/node/typecheck.js"
+    "nodeExample": "node ./example/node/typecheck.js",
+    "precommit": "npm test",
+    "coverage": "echo 'See your coverage report at http://localhost:8080' && node-http-server port=8080 root=./coverage/"
   },
+  "pre-commit": [
+    "precommit"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/RIAEvangelist/strong-type.git"
@@ -36,8 +41,11 @@
   "homepage": "https://github.com/RIAEvangelist/strong-type#readme",
   "dependencies": {},
   "devDependencies": {
+    "c8": "^7.6.0",
     "copyfiles": "*",
-    "node-http-server": "*",
+    "lcov2badge": "^0.1.2",
+    "node-http-server": "^8.1.3",
+    "pre-commit": "^1.2.2",
     "vanilla-test": "*"
   }
 }

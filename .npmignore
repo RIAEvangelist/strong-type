@@ -1,6 +1,6 @@
-node_modules/
-example/
-test/
-travis.yml
+example
+coverage
+test
+docs
 .gitignore
 index.html
