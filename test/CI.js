@@ -174,19 +174,20 @@ try{
 }
 cleanup();
 
-// try{
-//     basic('',);    
-// }catch(e){
-//     fail(e);
-// }
-// cleanup();
+try{
+    test.expects(`is.symbol(Symbol());`);
+    is.symbol(Symbol());
+}catch(e){
+    fail(e);
+}
+cleanup();
 
-// try{
-//     basic('',);    
-// }catch(e){
-//     fail(e);
-// }
-// cleanup();
+try{
+    basic('undefined');    
+}catch(e){
+    fail(e);
+}
+cleanup();
 
 // try{
 //     basic('',);    

@@ -50,6 +50,43 @@ class Is{
         return this.throw(typeof value, typeName);
     }
 
+    defined(value){
+        const weakIs=new Is(false);
+        if(weakIs.undefined(value)){
+            return this.throw('undefined','defined');
+        }
+
+        return true;
+    }
+
+    any(value){
+        return this.defined(value);
+    }
+
+    union(value,typesString){
+        const types=typesString.split('|');
+        const weakIs=new Is(false);
+        let pass=false;
+        let type='undefined';
+        for(type of types){
+            try{
+                if(weakIs[type](value)){
+                    pass=true;
+                    break;
+                }
+            }catch(err){
+                return this.throw(type,'a method available on strong-type');
+            }
+        }
+
+        if(pass){
+           return this[type](value);
+        }
+
+        return this.throw(typeof value, types.join('|'));
+
+    }
+
     //unique checks
     finite(value){
         if(isFinite(value)){
@@ -90,7 +127,7 @@ class Is{
     date(value){
         return this.instanceCheck(value,Date);
     }
-    
+
     generator(value){
         return this.symbolStringCheck(value,'Generator');
     }
@@ -133,30 +170,6 @@ class Is{
     
     undefined(value){
         return this.typeCheck(value,'undefined');
-    }
-
-    union(value,typesString){
-        const types=typesString.split('|');
-        const weakIs=new Is(false);
-        let pass=false;
-        let type='undefined';
-        for(type of types){
-            try{
-                if(weakIs[type](value)){
-                    pass=true;
-                    break;
-                }
-            }catch(err){
-                return this.throw(type,'a method of strong-type');
-            }
-        }
-
-        if(pass){
-           return this[type](value);
-        }
-
-        return this.throw(typeof value, types.join('|'));
-
     }
 
     set(value){

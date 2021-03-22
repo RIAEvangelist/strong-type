@@ -49,6 +49,13 @@ is.string(1);
 //union or multiple possible types
 //should not throw
 is.union(1,'string|number');
+
+//union or multiple possible types
+//should throw
+function check(any){
+    is.defined(any);
+}
+
 ```
 
 #### non-strict
@@ -163,6 +170,8 @@ You can use these to directly check your own types / classes Or extend the Is cl
 |`is.instanceCheck`|`value`=`new Fake`, `constructor`=`FakeCore`| The core defaults the args to a `Fake` instance and the `FakeCore` class. This allows unsupported js spec types to fail as expected with a `TypeError` instead of a `Reference` or other Error (see the `./example/web/` example in firefox which is missing some support for `Intl` classes). This method compares `value` with the `constructor` to insure the value is an `instanceof` the constructor. |
 |`is.symbolStringCheck`|`value`, `type`| This can be used to check the `Symbol.toStringTag` it works on all types, but in the core we only use it to check `generator`, `GeneratorFunction`, `async function`, and `async GeneratorFunction` as these have no other way to check their type. A generator ***for example*** has a type of `[object generator]` this way. So you pass in an expected `generator` as `value` and the string `'generator'` as the type, and we handle the rest including lowercasing everything to insure cross browser and platform checking |
 |`is.compare`|`value`, `targetValue`, `typeName`| this will do an explicit compare on the `value` and `targetValue`. In the core, we only use this for JS primitives/constants that have no other way to check such as `Infinity` and `globalThis`. The type name is the string representation of the class type, or a very explicit error string as the only place this arg is ever used is when the `compare` results in a `throws`. |
+|`is.defined`|`value`| this will check that a value is not `is.undefined` any type is valid except `undefined`. |
+|`is.any`|`value`| this is an alias to `is.defined` which will allow any type except `undefined`.|
 
 
 ## Example | Basic type checking
