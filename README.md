@@ -13,10 +13,8 @@ GitHub info :
 [![strong-type GitHub Release](https://img.shields.io/github/release/RIAEvangelist/strong-type.svg) ![GitHub license strong-type license](https://img.shields.io/github/license/RIAEvangelist/strong-type.svg) ![open issues for strong-type on GitHub](https://img.shields.io/github/issues/RIAEvangelist/strong-type.svg)](http://riaevangelist.github.io/strong-type/)
 
 
-Build Info :  
-GitHub Action CI (linux,windows & Mac) : ![Build Status](https://github.com/RIAEvangelist/strong-type/actions/workflows/node.js.yml/badge.svg)
-
-![Coverage Status](./coverage/lcov.svg)
+Build Info, GitHub Action CI (linux,windows & Mac) :  
+ ![Build Status](https://github.com/RIAEvangelist/strong-type/actions/workflows/node.js.yml/badge.svg) ![Coverage Status](./coverage/lcov.svg)
 
 
 
