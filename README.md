@@ -1,434 +1,372 @@
+![strong-type JavaScript values passing through a native type-validation gate](./assets/strong-type-header.png)
+
 # strong-type
 
-## Strongly Typed native JS without a hard requirement for transpiling.
+[Documentation and live playground](https://riaevangelist.github.io/strong-type/)
 
-What TypeScript should have been. `strong-type` will also work in TypeScript.
+[![npm version](https://img.shields.io/npm/v/strong-type.svg)](https://www.npmjs.com/package/strong-type) [![Node support](https://img.shields.io/node/v/strong-type.svg)](https://www.npmjs.com/package/strong-type) [![CI](https://github.com/RIAEvangelist/strong-type/actions/workflows/ci.yml/badge.svg)](https://github.com/RIAEvangelist/strong-type/actions/workflows/ci.yml) [![license](https://img.shields.io/github/license/RIAEvangelist/strong-type.svg)](./licence) [![dependencies](https://img.shields.io/badge/dependencies-0-70efa8)](./package.json)
 
-Type checking module for anywhere javascript can run ES6 modules. This includes node, electron and the browsers. Fully isomorphic. Unlike other solutions like TypeScript, `strong-type` works natively and does not require transpiling or bundling unless you want to. This make it inclusive of any framework transpiled or not.
+Native type enforcement for JavaScript. `strong-type` runs as the same untransformed ES module in browsers and Node. Strict checks throw a useful `TypeError`; non-strict checks return a boolean.
 
-npm strong-type info :  [See npm trends and stats for strong-type](http://npm-stat.com/charts.html?package=strong-type&author=&from=&to=)  
-![strong-type npm version](https://img.shields.io/npm/v/strong-type.svg) ![supported node version for strong-type](https://img.shields.io/node/v/strong-type.svg) ![total npm downloads for strong-type](https://img.shields.io/npm/dt/strong-type.svg) ![monthly npm downloads for strong-type](https://img.shields.io/npm/dm/strong-type.svg) ![npm licence for strong-type](https://img.shields.io/npm/l/strong-type.svg)
+## Native by design
 
-` npm install --save strong-type `  
+| Property | Guarantee | What it means |
+|---|---|---|
+| Module format | Native ESM | The checked-in JavaScript is what the runtime executes. |
+| Runtime dependencies | None | No third-party production packages. |
+| Development dependencies | None | Tests and the local docs server use Node built-ins. |
+| Bundler | Not required | Browser and Node imports work directly. |
+| Transpiler | Not required | No generated CommonJS or compatibility copy. |
+| Default entry point | Isomorphic | `index.js` contains no `node:*` imports. |
+| Node support | Explicit adapter | `strong-type/node` adds Node-only precision checks. |
+| Extensibility | Exported `Is` class | Custom validators work directly and in unions. |
 
-[![Roshi _ _](https://avatars3.githubusercontent.com/u/369041?v=3&s=100)](https://github.com/RIAEvangelist)
+## Install
 
-GitHub info :  
-[![strong-type GitHub Release](https://img.shields.io/github/release/RIAEvangelist/strong-type.svg) ![GitHub license strong-type license](https://img.shields.io/github/license/RIAEvangelist/strong-type.svg) ![open issues for strong-type on GitHub](https://img.shields.io/github/issues/RIAEvangelist/strong-type.svg)](http://riaevangelist.github.io/strong-type/)
-
-
-Build Info, GitHub Action CI (linux,windows & Mac) :  
- ![Build Status](https://github.com/RIAEvangelist/strong-type/actions/workflows/node.js.yml/badge.svg) ![Coverage Status](./coverage/lcov.svg)
-
-
-
-## What does strong-type do?
-`strong-type` allows easy type enforcement for all JS types objects and classes. It also supports `type unions` for multiple types, as well as special types like `.any` and `.defined`. It is also extensible and provides simple to use type checks for your own custom classes and types should you want to use them.
-
-It does all this without requiring any additional tooling or transpiling. This leaves you or your organization free to use whatever toolchain or framework you want, or even... to write vanilla native JS.
-
-## Testing and Coverage
-
-`string-type` is tested using [`vanilla-test`](https://github.com/RIAEvangelist/vanilla-test) which is a bare bones testing framework for js that supports ESM, and covered by [`C8`](https://github.com/bcoe/c8) which is the default coverage tool built into the node runtime. This pair is the most effective and accurate way to test ES6+ modules.
-
-Run the tests and build the coverage files on your local machine by running `node-test` or see the coverage files on the [strong-type CDN home](https://cdn-p939v.ondigitalocean.app/strong-type/) : https://cdn-p939v.ondigitalocean.app/strong-type/ 
-
-## Example | strict vs. non-strict
-
-Using `strict` and `non-strict` modes. By default `strong-type` runs `strict` and will `throw` a verbose err you can handle and use if the check fails, or return true if it passes.
-
-To use `non-strict` mode, simply pass `false` to the constructor. In this mode, `strong-type` will return `false` instead of throwing when the check fails, and will still return `true` when it passes.
-
-
-#### strict
-```javascript 
-import Is from 'strong-type';
-
-//strict
-const is = new Is;
-const is = new Is();
-const is = new Is(true);
-
-//throws
-is.string(1);
-
-//union or multiple possible types
-//should not throw
-is.union(1,'string|number');
-
-//union or multiple possible types
-//should throw
-function check(any){
-    is.defined(any);
-}
-
+```console
+npm install strong-type
 ```
 
-#### non-strict
-```javascript
+| Import | Runtime | Contents | Build required |
+|---|---|---|---|
+| `strong-type` | Browser + Node | All isomorphic and guarded host validators | No |
+| `strong-type/index.js` | Browser + Node | Compatibility path to the same core | No |
+| `strong-type/node` | Node | Core plus Node built-ins and exact `util.types` checks | No |
+| `strong-type/node.js` | Node | Compatibility path to the Node adapter | No |
+
+## Quick start
+
+```js
 import Is from 'strong-type';
 
-//non-strict
-const is = new Is(false);
+const is=new Is;
+const weakIs=new Is(false);
 
-//returns false
-is.string(1);
+is.string('strong-type');        // true
+weakIs.number('42');             // false
+is.union(new Map,'map|set');     // true
 
-//union or multiple possible types
-//should return true
-is.union(1,'string|number');
-
+is.number('42');                 // throws TypeError
 ```
 
-## Type check methods 
+## Strict and non-strict modes
 
-All of these methods take just one arg, the `value` to check. 
+| Mode | Create | Passing check | Failing check | Best use |
+|---|---|---|---|---|
+| Strict | `new Is` or `new Is(true)` | Returns `true` | Throws `TypeError` | Contracts and enforcement |
+| Non-strict | `new Is(false)` | Returns `true` | Returns `false` | Branching and type discovery |
 
-Unions can join any of the types supported by `Is`.
+Every advertised method exists in every runtime. When a guarded platform capability is unavailable, strict mode throws `TypeError` and non-strict mode returns `false`. Missing APIs never leak a `ReferenceError`.
 
-|Union|args|
-|-|-|
-|`is.union`|`value`,`pipe\|seperated\|type\|list`|
+## Validator reference
 
-|Most Common Type Methods|args|
-|-|-|
-|`is.globalThis`|`value`|
-|`is.array`|`value`|
-|`is.bigint`|`value`|
-|`is.boolean`|`value`|
-|`is.date`|`value`|
-|`is.finite`|`value`|
-|`is.generator`|`value`|
-|`is.asyncGenerator`|`value`|
-|`is.infinity`|`value`|
-|`is.map`|`value`|
-|`is.NaN`|`value`|
-|`is.null`|`value`|
-|`is.number`|`value`|
-|`is.object`|`value`|
-|`is.promise`|`value`|
-|`is.regExp`|`value`|
-|`is.set`|`value`|
-|`is.string`|`value`|
-|`is.symbol`|`value`|
-|`is.undefined`|`value`|
-|`is.weakMap`|`value`|
-|`is.weakSet`|`value`|
+The default isomorphic entry exposes 183 validators. The Node adapter adds 18, for 201 documented validators total. The [website reference](https://riaevangelist.github.io/strong-type/#types) gives every method its own searchable row with an example, edge case, and runtime label.
 
-|Function Type Methods|args|
-|-|-|
-|`is.function`|`value`|
-|`is.asyncFunction`|`value`|
-|`is.generatorFunction`|`value`|
-|`is.asyncGeneratorFunction`|`value`|
+### Values, primitives, and numbers
 
-|Error Type Methods|args|
-|-|-|
-|`is.error`|`value`|
-|`is.evalError`|`value`|
-|`is.rangeError`|`value`|
-|`is.referenceError`|`value`|
-|`is.syntaxError`|`value`|
-|`is.typeError`|`value`|
-|`is.URIError`|`value`|
+| Methods | What passes | Important detail |
+|---|---|---|
+| `defined`, `any`, `exists` | Anything except `undefined` | `null` is defined. |
+| `null` | Exactly `null` | No loose comparison; `undefined` fails. |
+| `nullish` | `null` or `undefined` | Other falsy values fail. |
+| `undefined` | Exactly `undefined` | `null` fails. |
+| `boolean` | Primitive booleans | Boxed Boolean objects fail. |
+| `bigInt`, `bigint` | Primitive bigint values | `bigint` is the lowercase alias. |
+| `number` | Primitive numbers | Includes `NaN` and infinities. |
+| `finite`, `finiteNumber` | Finite primitive numbers | Strings, `null`, and BigInt are not coerced. |
+| `integer` | Integer primitive numbers | `NaN` and infinities fail. |
+| `safeInteger` | Safe integer primitive numbers | Uses `Number.isSafeInteger`. |
+| `NaN`, `nan` | Exactly numeric `NaN` | No string coercion. |
+| `infinity`, `positiveInfinity` | Exactly positive `Infinity` | `infinity` keeps its positive-only compatibility meaning. |
+| `negativeInfinity` | Exactly negative `Infinity` | Positive Infinity fails. |
+| `infinite` | Either infinity | Finite numbers fail. |
+| `negativeZero` | Exactly `-0` | Uses `Object.is`; `+0` fails. |
+| `string` | Primitive strings | Boxed String objects fail. |
+| `symbol` | Primitive symbols | Boxed Symbol objects fail. |
+| `primitive` | `null` or any non-object, non-function value | Boxed primitives and functions fail. |
+| `globalThis` | Exactly the current `globalThis` | Host aliases are not substituted. |
+| `atomics`, `json`, `math`, `reflect` | Their exact global namespaces | Identity checks, not lookalike objects. |
+| `rawJSON` | Values created by `JSON.rawJSON` | Guarded until `JSON.isRawJSON` exists. |
 
-|Buffer/Typed Array Type Methods|args|
-|-|-|
-|`is.arrayBuffer`|`value`|
-|`is.dataView`|`value`|
-|`is.sharedArrayBuffer`|`value`|
-|`is.bigInt64Array`|`value`|
-|`is.bigUint64Array`|`value`|
-|`is.float32Array`|`value`|
-|`is.float64Array`|`value`|
-|`is.int8Array`|`value`|
-|`is.int16Array`|`value`|
-|`is.int32Array`|`value`|
-|`is.uint8Array`|`value`|
-|`is.uint8ClampedArray`|`value`|
-|`is.uint16Array`|`value`|
-|`is.uint32Array`|`value`|
+### Objects and collections
 
-|Intl Type Methods|args|
-|-|-|
-|`is.intlDateTimeFormat`|`value`|
-|`is.intlCollator`|`value`|
-|`is.intlDisplayNames`|`value`|
-|`is.intlListFormat`|`value`|
-|`is.intlLocale`|`value`|
-|`is.intlNumberFormat`|`value`|
-|`is.intlPluralRules`|`value`|
-|`is.intlRelativeTimeFormat`|`value`|
+| Methods | What passes | Important detail |
+|---|---|---|
+| `array` | Arrays from any realm | Uses `Array.isArray`. |
+| `date` | Date objects from any realm | Invalid dates still pass. |
+| `validDate` | Dates with a valid time value | Invalid Date fails. |
+| `map`, `weakMap`, `set`, `weakSet` | Their matching collection brands | Native internal-slot probes work across realms. |
+| `object` | Values where `typeof value === 'object'` | Compatibility behavior: `null` passes. |
+| `nonNullObject` | Non-null object values | Use this for the ordinary meaning of object. |
+| `plainObject` | Plain records, including null-prototype records | Arrays and class instances fail. |
+| `nullPrototypeObject` | Objects with an exact `null` prototype | Ordinary object literals fail. |
+| `argumentsObject` | Function `arguments` objects | Arrays fail. |
+| `promise` | Promise instances in the current realm | Structural thenables have a separate check. |
+| `thenable` | Objects or functions with a callable `then` | It never invokes `then`. |
+| `regExp`, `regexp` | RegExp objects from any realm | `regexp` is the lowercase-p alias. |
 
-|Garbage Collection Type Methods|args|
-|-|-|
-|`is.finalizationRegistry`|`value`|
-|`is.weakRef`|`value`|
+### Boxed primitives
 
-## Core methods 
+| Method | What passes | Primitive near miss |
+|---|---|---|
+| `boxedPrimitive` | Any boxed Boolean, Number, BigInt, String, or Symbol | `1` |
+| `booleanObject` | `Object(true)` | `true` |
+| `numberObject` | `Object(1)` | `1` |
+| `bigIntObject` | `Object(1n)` | `1n` |
+| `stringObject` | `Object('type')` | `'type'` |
+| `symbolObject` | `Object(Symbol('type'))` | `Symbol('type')` |
 
-You can use these to directly check your own types / classes Or extend the Is class to add your own methods in which you use these for checking more types, especially custom types and classes.
+### Functions and protocols
 
-|Method|args|description|
-|-|-|-|
-|`is.throw`|`valueType`, `expectedType`| this will use the valueType and expectedValueType to create and throw a new `TypeError` |
-|`is.typeCheck`|`value`, `type`| this will check the javascript spec types returned from `typeof`. So the `type` arg would be a string of `'string'`, `'boolean'`, `'number'`, `'object'`, `'undefined'`, `'bigint'` etc. |
-|`is.instanceCheck`|`value`=`new Fake`, `constructor`=`FakeCore`| The core defaults the args to a `Fake` instance and the `FakeCore` class. This allows unsupported js spec types to fail as expected with a `TypeError` instead of a `Reference` or other Error (see the `./example/web/` example in firefox which is missing some support for `Intl` classes). This method compares `value` with the `constructor` to insure the value is an `instanceof` the constructor. |
-|`is.symbolStringCheck`|`value`, `type`| This can be used to check the `Symbol.toStringTag` it works on all types, but in the core we only use it to check `generator`, `GeneratorFunction`, `async function`, and `async GeneratorFunction` as these have no other way to check their type. A generator ***for example*** has a type of `[object generator]` this way. So you pass in an expected `generator` as `value` and the string `'generator'` as the type, and we handle the rest including lowercasing everything to insure cross browser and platform checking |
-|`is.compare`|`value`, `targetValue`, `typeName`| this will do an explicit compare on the `value` and `targetValue`. In the core, we only use this for JS primitives/constants that have no other way to check such as `Infinity` and `globalThis`. The type name is the string representation of the class type, or a very explicit error string as the only place this arg is ever used is when the `compare` results in a `throws`. |
-|`is.defined`|`value`| this will check that a value is not `is.undefined` any type is valid except `undefined`. |
-|`is.any`|`value`| this is an alias to `is.defined` which will allow any type except `undefined`.|
-|`is.exists`|`value`| this is an alias to `is.defined` to determine if something exists. Very useful for feature testing. The alias was created for simplicity and transparency.|
+| Methods | What passes | Important detail |
+|---|---|---|
+| `function`, `callable` | Anything whose `typeof` is `function` | Includes async and generator functions. |
+| `asyncFunction` | Async functions | Ordinary functions fail. |
+| `generatorFunction` | Generator functions | Generator objects use `generator`. |
+| `asyncGeneratorFunction` | Async generator functions | Objects use `asyncGenerator`. |
+| `generator`, `asyncGenerator` | Their matching generator iterator objects | Function values fail. |
+| `iterator` | Values with a callable `next` | Structural by design. |
+| `asyncIterator` | Values with `next` and `Symbol.asyncIterator` | Structural by design. |
+| `iterable`, `asyncIterable` | Values with the matching symbol method | Null-safe and getter-safe. |
 
+### Errors
 
-## Example | Basic type checking
+| Methods | What passes | Runtime |
+|---|---|---|
+| `error` | `Error` instances | Shared |
+| `aggregateError` | `AggregateError` instances | Guarded standard |
+| `evalError` | `EvalError` instances | Shared |
+| `rangeError` | `RangeError` instances | Shared |
+| `referenceError` | `ReferenceError` instances | Shared |
+| `syntaxError` | `SyntaxError` instances | Shared |
+| `typeError` | `TypeError` instances | Shared |
+| `URIError`, `uriError` | `URIError` instances | Shared; lowercase alias included |
+| `suppressedError` | `SuppressedError` instances | Guarded standard |
 
-`strong-type` is intended to be very simple to use.
+### Typed arrays and buffers
 
-```javascript 
-import Is from 'strong-type';
+| Methods | What passes | Important detail |
+|---|---|---|
+| `typedArray` | Any typed array | Excludes `DataView`. |
+| `arrayBufferView` | Any typed array or `DataView` | Uses `ArrayBuffer.isView`. |
+| `bigInt64Array`, `bigUint64Array` | Matching BigInt typed arrays | Exact brand. |
+| `float16Array` | `Float16Array` | Guarded on older runtimes. |
+| `float32Array`, `float64Array` | Matching float typed arrays | Exact brand. |
+| `int8Array`, `int16Array`, `int32Array` | Matching signed integer typed arrays | Exact brand. |
+| `uint8Array`, `uint8ClampedArray`, `uint16Array`, `uint32Array` | Matching unsigned integer typed arrays | A Node Buffer is also a Uint8Array. |
+| `arrayBuffer` | `ArrayBuffer` | Cross-realm native slot probe. |
+| `sharedArrayBuffer` | `SharedArrayBuffer` | Guarded where shared memory is absent. |
+| `anyArrayBuffer` | Either buffer kind | Views fail. |
+| `dataView` | `DataView` | Typed arrays fail. |
+| `resizableArrayBuffer` | Resizable ArrayBuffer values | Fixed buffers fail. |
+| `growableSharedArrayBuffer` | Growable SharedArrayBuffer values | Fixed shared buffers fail. |
+| `detachedArrayBuffer` | Transferred/detached ArrayBuffer values | The fallback probe is non-destructive. |
 
-//strict
-const is = new Is;
+### Intl
 
-function strongTypeRequired(aNumber,aString,anAsyncFunction){
-    is.number(aNumber);
-    is.string(aString);
-    is.asyncFunction(anAsyncFunction);
-}
+| Methods | What passes | Availability |
+|---|---|---|
+| `intlDateTimeFormat` | `Intl.DateTimeFormat` | Shared |
+| `intlCollator` | `Intl.Collator` | Shared |
+| `intlDisplayNames` | `Intl.DisplayNames` | Guarded |
+| `intlListFormat` | `Intl.ListFormat` | Guarded |
+| `intlLocale` | `Intl.Locale` | Shared |
+| `intlNumberFormat` | `Intl.NumberFormat` | Shared |
+| `intlPluralRules` | `Intl.PluralRules` | Shared |
+| `intlRelativeTimeFormat` | `Intl.RelativeTimeFormat` | Guarded |
+| `intlSegmenter` | `Intl.Segmenter` | Guarded |
+| `intlSegments` | Values returned by `segmenter.segment()` | Guarded |
+| `intlDurationFormat` | `Intl.DurationFormat` | Guarded |
 
-function unionStrongTypeRequired(aNumberOrString){
-    is.union(aNumberOrString,'number|string');
-}
+### Lifetime, resources, and Temporal
 
+| Methods | What passes | Availability |
+|---|---|---|
+| `finalizationRegistry` | `FinalizationRegistry` objects | Guarded standard |
+| `weakRef` | `WeakRef` objects | Guarded standard |
+| `disposable` | Values with callable `Symbol.dispose` | Guarded structural protocol |
+| `asyncDisposable` | Values with callable `Symbol.asyncDispose` | Guarded structural protocol |
+| `disposableStack` | `DisposableStack` objects | Guarded standard |
+| `asyncDisposableStack` | `AsyncDisposableStack` objects | Guarded standard |
+| `temporalDuration` | `Temporal.Duration` | Guarded standard |
+| `temporalInstant` | `Temporal.Instant` | Guarded standard |
+| `temporalPlainDate` | `Temporal.PlainDate` | Guarded standard |
+| `temporalPlainDateTime` | `Temporal.PlainDateTime` | Guarded standard |
+| `temporalPlainMonthDay` | `Temporal.PlainMonthDay` | Guarded standard |
+| `temporalPlainTime` | `Temporal.PlainTime` | Guarded standard |
+| `temporalPlainYearMonth` | `Temporal.PlainYearMonth` | Guarded standard |
+| `temporalZonedDateTime` | `Temporal.ZonedDateTime` | Guarded standard |
 
-//this will throw because we do not pass an async Function, but rather a normal function.
-strongTypeRequired(1,'a',function(){})
+### Shared Web APIs
 
-//these will both pass because we accept both types in a union for the first param. 
-unionStrongTypeRequired(1);
-unionStrongTypeRequired('a');
+These methods are present on every `Is` instance. The constructor or singleton is resolved through `globalThis` only when the method is called.
 
+| Family | Methods | What passes |
+|---|---|---|
+| URL | `url`, `urlSearchParams`, `urlPattern` | Matching URL API objects |
+| Text | `textEncoder`, `textDecoder`, `textEncoderStream`, `textDecoderStream` | Encoding API objects |
+| Data | `domException`, `blob`, `file`, `formData`, `headers`, `request`, `response` | Matching Fetch/data objects |
+| Cancellation | `abortController`, `abortSignal` | Matching cancellation objects |
+| Events | `event`, `eventTarget`, `customEvent`, `messageEvent`, `closeEvent`, `errorEvent` | Matching event objects |
+| Messaging | `broadcastChannel`, `messageChannel`, `messagePort`, `webSocket`, `eventSource` | Matching communication objects |
+| Host values | `navigator`, `storage` | The current navigator or a Storage object |
+| Readable streams | `readableStream`, `readableStreamDefaultReader`, `readableStreamBYOBReader`, `readableStreamDefaultController`, `readableByteStreamController`, `readableStreamBYOBRequest` | Matching Web Streams objects |
+| Writable streams | `writableStream`, `writableStreamDefaultWriter`, `writableStreamDefaultController` | Matching Web Streams objects |
+| Transform streams | `transformStream`, `transformStreamDefaultController` | Matching transform objects |
+| Queuing | `byteLengthQueuingStrategy`, `countQueuingStrategy` | Matching strategy objects |
+| Compression | `compressionStream`, `decompressionStream` | Matching compression objects |
+| Crypto | `crypto`, `subtleCrypto`, `cryptoKey` | Current crypto services and keys |
+| Performance | `performance`, `performanceEntry`, `performanceMark`, `performanceMeasure`, `performanceObserver`, `performanceObserverEntryList`, `performanceResourceTiming` | Matching performance objects |
+| WebAssembly | `webAssemblyModule`, `webAssemblyInstance`, `webAssemblyMemory`, `webAssemblyTable`, `webAssemblyGlobal`, `webAssemblyTag`, `webAssemblyException`, `webAssemblyCompileError`, `webAssemblyLinkError`, `webAssemblyRuntimeError` | Matching WebAssembly objects and errors |
 
-```
-#### browser
-![Basic Type Checking Example Web](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/basicExampleWeb.PNG)
+## Core and extension methods
 
-#### node
-![Basic Type Checking Example Node](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/basicExampleNode.PNG)
+| Method | Result | Purpose |
+|---|---|---|
+| `throw(valueType,expectedType)` | `false` or throws | Central strict/non-strict failure behavior. |
+| `check(value,pass,expectedType)` | `true`, `false`, or throws | Turn a predicate into strong-type behavior. |
+| `typeCheck(value,type)` | `true`, `false`, or throws | Validate a `typeof` result. |
+| `instanceCheck(value,constructor)` | `true`, `false`, or throws | Validate a custom class or realm-local constructor. |
+| `symbolStringCheck(value,type)` | `true`, `false`, or throws | Validate an intrinsic object tag. |
+| `compare(value,target,typeName)` | `true`, `false`, or throws | Compare exact identity with `Object.is`. |
+| `globalInstanceCheck(value,type)` | `true`, `false`, or throws | Guard and check a named global constructor. |
+| `nestedInstanceCheck(value,container,type)` | `true`, `false`, or throws | Guard and check a constructor inside a namespace. |
+| `globalValueCheck(value,type)` | `true`, `false`, or throws | Check exact identity with a named global value. |
+| `nestedValueCheck(value,container,type)` | `true`, `false`, or throws | Check exact identity with a nested value. |
+| `union(value,types)` | `true`, `false`, or throws | Accept one named validator from a pipe string or array. |
 
-## Example | Generator type checking
+## Unions
 
-Generators are notoriously confusing to type check for many devs. This is why we chose to use them as an example.
-
-```javascript 
-import Is from 'strong-type';
-
-//strict
-const is = new Is;
-
-//empty generator for this example's sake
-function* myGenFunc(){};
-const myGen=myGenFunc();
-
-//we'll show async as well
-async function* myAsyncGenFunc(){}
-const myAsyncGen=myAsyncGenFunc();
-
-//empty function
-function myFunc(){};
-
-//will pass and allow contunue
-is.generator(myGen);
-
-/*
-will fail because a generatorFunction is a 
-GeneratorFunction, not a Generator
-*/
-try{
-    is.generator(myGenFunc);
-}catch(err){
-    console.log(err);
-}
-
-//will pass and allow contunue
-is.generatorFunction(myGenFunc);
-
-//will fail because a function is not a generatorFunction
-try{
-    is.generatorFunction(myFunc);
-}catch(err){
-    console.log(err);
-}
-
-/*
-will fail because this is STRONG-type, a 
-generatorFunction is explicitly a GeneratorFunction,
-and not a Function
-*/
-try{
-    is.function(myGenFunc);
-}catch(err){
-    console.log(err);
-}
-
-//will fail because a function is not a generatorFunction
-try{
-    is.generatorFunction(myFunc);
-}catch(err){
-    console.log(err);
-}
-
-//will pass and allow contunue
-is.asyncGeneratorFunction(myAsyncGenFunc);
-
-//will pass and allow contunue
-is.asyncGenerator(myAsyncGen);
-
-/*
-will fail becase STRONG-type 
-asyncGenerators and generators are explicitly different
-this is the same for generatorFunctions and functions
-*/
-try{
-    is.asyncGenerator(myGen);
-}catch(err){
-    console.log(err);
-}
-
-try{
-    is.generator(myAsyncGen);
-}catch(err){
-    console.log(err);
-}
-
-
+```js
+is.union('type','string|number');
+is.union(42,['string','number']);
 ```
 
-#### browser
-![Generator Type Checking Example Web](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/generatorExampleWeb.PNG)
+| Behavior | Result |
+|---|---|
+| Whitespace around pipe names | Trimmed |
+| Matching validator | Called once |
+| Custom subclass validator | Supported |
+| Node adapter validator | Supported through `IsNode` |
+| Inherited `Object` method such as `toString` | Rejected |
+| Multi-argument helper method | Rejected |
 
-#### node
-![Generator Type Checking Example Node](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/generatorExampleNode.PNG)
+## Node adapter
 
-## Date example
+```js
+import IsNode from 'strong-type/node';
 
-```javascript 
-import Is from 'strong-type';
+const is=new IsNode;
 
-const is = new Is;
-
-//returns true
-is.date(new Date()); 
-
-//throws in strict or returns false in non-strict
-is.date(1975);
-
+is.buffer(Buffer.from('type'));
+is.proxy(new Proxy({},{}));
+is.nodeReadable(process.stdin);
 ```
 
-## isNaN() vs is.NaN()
+The adapter imports Node built-ins only. It never enters the default browser-safe import graph.
 
-Javascripts types are weak by nature, so the built in `isNaN()` function returns true for anything that not a number, but `is.NaN()` only returns true if it is explicitly passed `NaN`.
+| Method | What passes | Important detail |
+|---|---|---|
+| `buffer` | Node Buffer values | A plain Uint8Array fails. |
+| `nodeStream` | Any classic Node Stream | Web Streams use the shared validators. |
+| `nodeReadable` | Node Readable streams | Duplex and Transform inherit Readable. |
+| `nodeWritable` | Node Writable streams | Duplex and Transform inherit Writable. |
+| `nodeDuplex` | Node Duplex streams | Plain readable or writable streams fail. |
+| `nodeTransform` | Node Transform streams | PassThrough inherits Transform. |
+| `nodePassThrough` | Node PassThrough streams | Other transforms fail. |
+| `eventEmitter` | Node EventEmitter instances | DOM EventTarget fails. |
+| `timeout` | Handles returned by `setTimeout` | Constructor is discovered lazily. |
+| `immediate` | Handles returned by `setImmediate` | Constructor is discovered lazily. |
+| `keyObject` | Node crypto KeyObject values | Web CryptoKey uses `cryptoKey`. |
+| `x509Certificate` | Node X509Certificate objects | Requires a parseable certificate. |
+| `proxy` | Proxy values | Exact `util.types.isProxy` check. |
+| `moduleNamespaceObject` | Results from `import()` | Exact `util.types` check. |
+| `external` | Native external values | Usually supplied by a native addon. |
+| `nativeError` | Native Error values | Includes cross-realm errors. |
+| `mapIterator` | Native Map iterators | Set iterators fail. |
+| `setIterator` | Native Set iterators | Map iterators fail. |
 
-```js 
-import Is from 'strong-type';
+## Direct browser use without bundling
 
-const is = new Is;
+Use a native import map. Serve the files over HTTP; browsers do not load ES modules reliably from `file:` URLs.
 
-//built in JS isNaN
-//returns false
-isNaN(1);
-
-//all return true
-isNaN(NaN);
-isNaN(undefined);
-isNaN('a'); 
-
-//strong-type is.NaN all return false in non-strict mode,
-//or throw in default strict mode
-is.NaN(1);
-is.NaN(undefined);
-is.NaN('a');
-
-//in strong-type only this returns true
-is.NaN(NaN);
-
-```
-
-#### browser
-![Date Type Checking Example Web](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/dateExampleWeb.PNG)
-
-#### node
-![Date Type Checking Example Node](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/dateExampleNode.PNG)
-
-
-
-## Running the browser and node type support examples
-run `npm i` in the root dir of this module to make sure you get the devDependencies installed.
-
-#### node example :  
-`npm run nodeExample` The whole screen should be green as all of the types are supported in node.
-
-#### browser examples and support tests
-`npm start`  
-this will spin up a `node-http-server` in this modules root on port 8000. The browser examples are in the  `./example/web/` folder. You can see them by going to this local address : [http://localhost:8000/](http://localhost:8000/example/web/index.html)
-
-Chrome, Opera, and Edge support all the types so all rows will be green.
-
-You will see some red rows in Firefox as it does not yet support all types. The unsupported types will throw type errors when checked/validated.
-
-#### Digital Ocean Static App
-
-We use the free Digital Ocean Static Apps to host a version of the local server. It is exactly the same as if you ran `npm start` on your machine. You can also use this like a CDN as it automatically rebuilds from main/master each time the branch is updated. [strong-type CDN home](https://cdn-p939v.ondigitalocean.app/strong-type/) : https://cdn-p939v.ondigitalocean.app/strong-type/
-
-
-## Extending the Is class for your own Types
-
-If you are using type checking on your own types in production, its probably wise for yout to just go ahead and extend the module rather than calling the more cumbersome `Core Methods` many times.
-
-#### custom Pizza type
-```javascript
-//custom class type constructor
-class Pizza{
-    constructor(topping){
-        this.eat=true;
+```html
+<script type="importmap">
+    {
+        "imports": {
+            "strong-type": "./node_modules/strong-type/index.js"
+        }
     }
-}
+</script>
 
-export {default:Pizza, Pizza}
+<script type="module">
+    import Is from 'strong-type';
+
+    const is=new Is;
+    console.log(is.url(new URL('https://example.com')));
+</script>
 ```
 
-#### extension
-```javascript
-import Is from 'strong-type';
-import Pizza from 'my-delicious-pizza';
+You can also import the source directly from your own path:
 
-class IsMy extends Is{
-    //custom pizza type
+```js
+import Is from './node_modules/strong-type/index.js';
+```
+
+No bundle, transform, runtime shim, or host switch is involved.
+
+## Extend strong-type
+
+```js
+import Is from 'strong-type';
+
+class Pizza{}
+
+class MyIs extends Is{
     pizza(value){
         return this.instanceCheck(value,Pizza);
     }
 }
 
-export={default:IsMy, IsMy};
+const is=new MyIs;
+
+is.pizza(new Pizza);
+is.union(new Pizza,'pizza|string');
 ```
 
-#### test
-```javascript
-import IsMy from 'my-delicious-typechecks';
-import Pizza from 'my-delicious-pizza';
+| Extension helper | Use |
+|---|---|
+| `this.typeCheck(value,'string')` | Custom `typeof` validator |
+| `this.instanceCheck(value,Pizza)` | Custom class validator |
+| `this.check(value,predicate,'description')` | Any custom predicate with standard strict behavior |
+| `this.throw(actual,expected)` | Explicit failure path |
 
-const is=new IsMy;
+## Corrected exact behavior
 
-//will throw because 42 is not a Pizza Type
-//and 
-is.pizza(42)
+Version 2 removes several coercive edge cases while retaining the original method names.
 
-```
+| Check | Old behavior | Current behavior |
+|---|---|---|
+| `null(undefined)` | Passed through loose equality | Fails |
+| `infinity('Infinity')` | Passed through loose equality | Fails |
+| `finite('1')` | Passed through global coercive `isFinite` | Fails |
+| `finite(null)` | Passed through coercion | Fails |
+| `finite(1n)` | Could leak a native error | Returns false or throws strong-type `TypeError` |
+| `union(value,' string \| number ')` | Did not trim names | Works |
+| `union(value,'toString')` | Could call an inherited method | Rejected |
+| Subclass validators in `union` | Lost by constructing base `Is` | Preserved |
 
-#### browser
-![Pizza Type Checking Example Web](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/pizzaExampleWeb.PNG)
+## Commands
 
-#### node
-![Pizza Type Checking Example Node](https://raw.githubusercontent.com/riaevangelist/strong-type/main/docs/img/pizzaExampleNode.PNG)
+| Command | What it does | Third-party tooling |
+|---|---|---|
+| `npm test` | Runs core, Node adapter, and documentation checks | None |
+| `npm run test:core` | Runs portable validator regression tests | None |
+| `npm run test:node` | Runs Node adapter and cross-realm tests | None |
+| `npm run test:docs` | Checks reference completeness and site integrity | None |
+| `npm start` | Serves the docs and playground at `http://localhost:8000/` | None |
+| `npm run nodeExample` | Runs the Node example | None |
 
+## License
+
+[MIT](./licence) · Roshi _ _

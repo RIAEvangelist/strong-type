@@ -1,9 +1,24 @@
 {
   "name": "strong-type",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "type": "module",
-  "description": "allows easy type enforcement for all JS types objects and classes. it is also extensible and provides simple to use type checks for your own custom classes and types",
+  "description": "Dependency-free native ESM type enforcement for JavaScript values, objects, classes, browsers, and Node.",
   "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./index.js": "./index.js",
+    "./node": "./node.js",
+    "./node.js": "./node.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "node.js",
+    "assets/strong-type-header.png",
+    "README.md",
+    "licence"
+  ],
+  "sideEffects": false,
   "directories": {
     "example": "example"
   },
@@ -11,11 +26,13 @@
     "node": ">=12.21.0"
   },
   "scripts": {
-    "test": "npm i && c8 -r lcov -r html node test/CI.js && c8 report && node ./lcov.js",
-    "start": "npm run emulate && node-http-server port=8000 verbose=true",
-    "emulate": "npm i && copyfiles -V \"./!(node_modules)/*\" \"./**!(node_modules)\"  \"./example/node_modules/strong-type/\" && copyfiles -V \"./node_modules/**/*\" \"./example/\" && copyfiles -V \"./!(node_modules)/*\" \"./**!(node_modules)\"",
+    "test": "node test/CI.js && node test/node.js && node test/docs.js",
+    "test:core": "node test/CI.js",
+    "test:node": "node test/node.js",
+    "test:docs": "node test/docs.js",
+    "start": "node scripts/serve.js",
     "nodeExample": "node ./example/node/typecheck.js",
-    "coverage": "echo 'See your coverage report at http://localhost:8080' && node-http-server port=8080 root=./coverage/"
+    "check": "npm test"
   },
   "repository": {
     "type": "git",
@@ -27,19 +44,16 @@
     "validation",
     "validate",
     "check",
-    "checking"
+    "checking",
+    "esm",
+    "isomorphic",
+    "browser",
+    "node"
   ],
   "author": "Roshi _ _",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/RIAEvangelist/strong-type/issues"
   },
-  "homepage": "https://github.com/RIAEvangelist/strong-type#readme",
-  "devDependencies": {
-    "c8": "^7.6.0",
-    "copyfiles": "*",
-    "lcov2badge": "^0.1.2",
-    "node-http-server": "^8.1.3",
-    "vanilla-test": "*"
-  }
+  "homepage": "https://riaevangelist.github.io/strong-type/"
 }

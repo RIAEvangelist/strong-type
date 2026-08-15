@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>strong-type playground</title>
+        <link rel="stylesheet" href="./playground.css">
+        <script type="importmap">
+            {
+                "imports": {
+                    "strong-type": "../index.js"
+                }
+            }
+        </script>
+        <script type="module" src="./runner.js"></script>
+    </head>
+    <body>
+        <main class="playground">
+            <section class="editor-panel" aria-labelledby="editor-title">
+                <header>
+                    <div><span class="dot violet"></span><b id="editor-title">module.js</b></div>
+                    <div class="controls">
+                        <button id="reset" type="button">Reset</button>
+                        <button id="copy" type="button">Copy</button>
+                        <button id="run" class="run" type="button">Run <kbd>⌘↵</kbd></button>
+                    </div>
+                </header>
+                <label class="sr-only" for="source">JavaScript source</label>
+                <textarea id="source" spellcheck="false" aria-describedby="editor-help"></textarea>
+                <p id="editor-help">Native ESM · Tab inserts four spaces · Ctrl/⌘ + Enter runs</p>
+            </section>
+            <section class="console-panel" aria-labelledby="console-title">
+                <header>
+                    <div><span class="dot green"></span><b id="console-title">console</b></div>
+                    <button id="clear" type="button">Clear</button>
+                </header>
+                <ol id="output" aria-live="polite"></ol>
+            </section>
+        </main>
+    </body>
+</html>

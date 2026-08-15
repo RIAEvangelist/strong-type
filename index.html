@@ -1,17 +1,265 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
     <head>
-        <title>strong-type node module</title>
-        <style>
-            body{
-                font-family: arial;
-            }
-        </style>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="description" content="strong-type is dependency-free native ESM type enforcement for browsers and Node.">
+        <meta name="theme-color" content="#070a18">
+        <title>strong-type — native JavaScript type enforcement</title>
+        <link rel="stylesheet" href="./docs.css">
+        <script type="module" src="./docs.js"></script>
     </head>
     <body>
-        <h1>strong-type npm module</h1>
-        <a href='./test/'>tests</a>
-        <br>
-        <a href='./example/web/'>examples</a>
+        <a class="skip-link" href="#content">Skip to documentation</a>
+        <header class="site-header">
+            <a class="brand" href="#start" aria-label="strong-type home"><span>{</span> strong-type <span>}</span></a>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="top-nav">Menu</button>
+            <nav id="top-nav" class="top-nav" aria-label="Primary navigation">
+                <a href="#install">Install</a>
+                <a href="#types">Types</a>
+                <a href="#node">Node</a>
+                <a href="#playground">Playground</a>
+                <a href="https://github.com/RIAEvangelist/strong-type">GitHub</a>
+            </nav>
+        </header>
+
+        <main id="content">
+            <section id="start" class="hero">
+                <div class="hero-copy">
+                    <p class="eyebrow">native ESM · zero dependencies · no build</p>
+                    <h1>Know what a value is.<br><span>Enforce what it should be.</span></h1>
+                    <p class="lede">strong-type gives JavaScript one clear type-checking surface across browser and Node. Strict checks throw. Non-strict checks return booleans. The source you read is the source the runtime executes.</p>
+                    <div class="hero-actions">
+                        <a class="button primary" href="#playground">Try the playground</a>
+                        <a class="button" href="#types">Browse every type</a>
+                    </div>
+                    <ul class="signal-row" aria-label="Project guarantees">
+                        <li><span class="signal cyan"></span>isomorphic core</li>
+                        <li><span class="signal violet"></span>201 documented checks</li>
+                        <li><span class="signal green"></span>0 dependencies</li>
+                    </ul>
+                </div>
+                <div class="type-terminal" aria-label="strong-type example">
+                    <div class="terminal-bar"><span></span><span></span><span></span><b>type-gate.js</b></div>
+                    <pre><code><span class="muted">import</span> Is <span class="muted">from</span> <span class="string">'strong-type'</span>;
+
+<span class="muted">const</span> is=<span class="keyword">new</span> Is;
+<span class="muted">const</span> value=<span class="keyword">new</span> Map;
+
+is.map(value);       <span class="pass">// true</span>
+is.string(value);    <span class="fail">// TypeError</span></code></pre>
+                    <div class="type-flow" aria-hidden="true"><span>value</span><b>→</b><span class="gate">Is</span><b>→</b><span class="pass-chip">true</span><span class="fail-chip">TypeError</span></div>
+                </div>
+            </section>
+
+            <section id="guarantees" class="section intro-section">
+                <p class="section-kicker">Native by design</p>
+                <h2>Nothing between your code and JavaScript.</h2>
+                <p>There is no runtime dependency tree, CommonJS copy, transpiler, framework, or bundle. The optional Node adapter imports only built-in Node modules and never enters the default import graph.</p>
+                <div class="table-wrap">
+                    <table>
+                        <caption>Project guarantees</caption>
+                        <thead><tr><th scope="col">Property</th><th scope="col">Guarantee</th><th scope="col">What it means</th></tr></thead>
+                        <tbody>
+                            <tr><td>Module format</td><td><span class="status shared">Native ESM</span></td><td>Run the checked-in JavaScript directly.</td></tr>
+                            <tr><td>Runtime dependencies</td><td><span class="status pass">None</span></td><td>No third-party production packages.</td></tr>
+                            <tr><td>Build step</td><td><span class="status pass">None</span></td><td>No bundler or transpiler is required.</td></tr>
+                            <tr><td>Default entry</td><td><code>strong-type</code></td><td>Browser-safe and Node-safe.</td></tr>
+                            <tr><td>Node entry</td><td><code>strong-type/node</code></td><td>Explicit Node built-ins and exact util checks.</td></tr>
+                            <tr><td>Extension model</td><td><code>class MyIs extends Is</code></td><td>Your validators also work in unions.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div class="docs-shell">
+                <aside class="side-nav" aria-label="Documentation sections">
+                    <p>On this page</p>
+                    <a href="#install">Install</a>
+                    <a href="#quick-start">Quick start</a>
+                    <a href="#modes">Modes</a>
+                    <a href="#entry-points">Entry points</a>
+                    <a href="#types">Type reference</a>
+                    <a href="#core">Core methods</a>
+                    <a href="#unions">Unions</a>
+                    <a href="#node">Node adapter</a>
+                    <a href="#extend">Extend</a>
+                    <a href="#playground">Playground</a>
+                    <a href="#support">Support</a>
+                    <a href="#development">Development</a>
+                </aside>
+
+                <div class="docs-content">
+                    <section id="install" class="doc-section">
+                        <p class="section-kicker">01 · Install</p>
+                        <h2>One package. Two explicit entry points.</h2>
+                        <div class="code-block"><div><span>npm</span><button type="button" data-copy="npm install strong-type">Copy</button></div><pre><code>npm install strong-type</code></pre></div>
+                        <div class="table-wrap">
+                            <table>
+                                <caption>Import options</caption>
+                                <thead><tr><th scope="col">Import</th><th scope="col">Runtime</th><th scope="col">Contents</th><th scope="col">Build required</th></tr></thead>
+                                <tbody>
+                                    <tr><td><code>strong-type</code></td><td>Browser + Node</td><td>Isomorphic validators</td><td>No</td></tr>
+                                    <tr><td><code>strong-type/index.js</code></td><td>Browser + Node</td><td>Compatibility path to the same core</td><td>No</td></tr>
+                                    <tr><td><code>strong-type/node</code></td><td>Node only</td><td>Core plus Buffer, streams, timers, crypto, and util.types</td><td>No</td></tr>
+                                    <tr><td><code>strong-type/node.js</code></td><td>Node only</td><td>Compatibility path to the Node adapter</td><td>No</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section id="quick-start" class="doc-section">
+                        <p class="section-kicker">02 · Quick start</p>
+                        <h2>Use the runtime directly.</h2>
+                        <div class="code-block"><div><span>JavaScript</span><button type="button" data-copy-target="quick-code">Copy</button></div><pre id="quick-code"><code>import Is from 'strong-type';
+
+const is=new Is;
+const weakIs=new Is(false);
+
+is.string('strong-type');        // true
+weakIs.number('42');             // false
+is.union(new Map,'map|set');     // true
+
+is.number('42');                 // throws TypeError</code></pre></div>
+                    </section>
+
+                    <section id="modes" class="doc-section">
+                        <p class="section-kicker">03 · Behavior</p>
+                        <h2>Strict when enforcing. Boolean when inspecting.</h2>
+                        <div class="table-wrap">
+                            <table>
+                                <caption>Strict and non-strict behavior</caption>
+                                <thead><tr><th scope="col">Mode</th><th scope="col">Create</th><th scope="col">Passing check</th><th scope="col">Failing check</th><th scope="col">Best use</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Strict</td><td><code>new Is</code></td><td><code>true</code></td><td>Throws <code>TypeError</code></td><td>Contracts and enforcement</td></tr>
+                                    <tr><td>Non-strict</td><td><code>new Is(false)</code></td><td><code>true</code></td><td><code>false</code></td><td>Branching and discovery</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section id="entry-points" class="doc-section boundary-section">
+                        <p class="section-kicker">04 · Runtime boundary</p>
+                        <h2>The default graph stays isomorphic.</h2>
+                        <div class="boundary-flow" aria-label="Entry point architecture">
+                            <div><b>Browser</b><code>import Is from 'strong-type'</code></div>
+                            <span>→</span>
+                            <div class="core-node"><b>index.js</b><small>zero host imports</small></div>
+                            <span>←</span>
+                            <div><b>Node</b><code>import Is from 'strong-type'</code></div>
+                        </div>
+                        <div class="node-branch"><span>Node precision</span><b>→</b><code>import Is from 'strong-type/node'</code><b>→</b><span>node:* built-ins only</span></div>
+                    </section>
+
+                    <section id="types" class="doc-section reference-section">
+                        <p class="section-kicker">05 · Complete reference</p>
+                        <h2>Every validator, explained.</h2>
+                        <p>Every method exists in every runtime. A guarded type that the host does not provide throws in strict mode and returns false in non-strict mode—never a missing-global ReferenceError.</p>
+                        <label class="filter-label" for="type-filter">Filter methods, accepted values, notes, or runtime</label>
+                        <input id="type-filter" class="type-filter" type="search" placeholder="Try: temporal, stream, bigint, Web API…" autocomplete="off">
+                        <p id="filter-status" class="filter-status" aria-live="polite"></p>
+                        <div id="validator-tables"></div>
+                    </section>
+
+                    <section id="core" class="doc-section">
+                        <p class="section-kicker">06 · Core methods</p>
+                        <h2>Build checks in the same style.</h2>
+                        <div id="core-table" class="table-wrap"></div>
+                    </section>
+
+                    <section id="unions" class="doc-section">
+                        <p class="section-kicker">07 · Unions</p>
+                        <h2>Accept one of several named validators.</h2>
+                        <div class="code-block"><div><span>JavaScript</span><button type="button" data-copy-target="union-code">Copy</button></div><pre id="union-code"><code>is.union('type','string|number');
+is.union(42,['string','number']);
+
+// Spaces are trimmed. Custom and Node validators work.
+nodeIs.union(Buffer.from('type'),'buffer|string');</code></pre></div>
+                        <div class="callout">Validator names are resolved only from the strong-type prototype chain. Inherited Object methods such as <code>toString</code> and multi-argument helper methods are rejected.</div>
+                    </section>
+
+                    <section id="node" class="doc-section">
+                        <p class="section-kicker">08 · Node adapter</p>
+                        <h2>Node precision stays opt-in.</h2>
+                        <p>The adapter extends the same <code>Is</code> class. It imports only <code>node:util</code>, <code>node:stream</code>, <code>node:events</code>, and <code>node:crypto</code>. The browser playground intentionally never loads it.</p>
+                        <div class="code-block"><div><span>Node JavaScript</span><button type="button" data-copy-target="node-code">Copy</button></div><pre id="node-code"><code>import IsNode from 'strong-type/node';
+
+const is=new IsNode;
+
+is.buffer(Buffer.from('type'));
+is.proxy(new Proxy({},{}));
+is.nodeReadable(process.stdin);</code></pre></div>
+                        <div id="node-table" class="table-wrap"></div>
+                    </section>
+
+                    <section id="extend" class="doc-section">
+                        <p class="section-kicker">09 · Extend</p>
+                        <h2>Your own types stay first-class.</h2>
+                        <div class="code-block"><div><span>JavaScript</span><button type="button" data-copy-target="extend-code">Copy</button></div><pre id="extend-code"><code>import Is from 'strong-type';
+
+class Pizza{}
+
+class MyIs extends Is{
+    pizza(value){
+        return this.instanceCheck(value,Pizza);
+    }
+}
+
+const is=new MyIs;
+is.pizza(new Pizza);
+is.union(new Pizza,'pizza|string');</code></pre></div>
+                    </section>
+
+                    <section id="playground" class="doc-section playground-section">
+                        <p class="section-kicker">10 · Playground</p>
+                        <h2>Edit real native modules.</h2>
+                        <p>The editor runs a Blob-backed ES module in the iframe below. It imports the checked-in <code>index.js</code> directly. Press Ctrl/⌘ + Enter to run.</p>
+                        <iframe id="playground-frame" title="strong-type JavaScript playground" src="./playground/frame.html" sandbox="allow-scripts allow-same-origin"></iframe>
+                    </section>
+
+                    <section id="support" class="doc-section">
+                        <p class="section-kicker">11 · Runtime support</p>
+                        <h2>Methods are stable; capabilities vary.</h2>
+                        <div class="table-wrap">
+                            <table>
+                                <caption>Runtime availability rules</caption>
+                                <thead><tr><th scope="col">Label</th><th scope="col">Availability</th><th scope="col">When unavailable</th></tr></thead>
+                                <tbody>
+                                    <tr><td><span class="status shared">Shared</span></td><td>Standard JavaScript available across supported Node and modern browsers.</td><td>Not normally applicable.</td></tr>
+                                    <tr><td><span class="status guarded">Guarded standard</span></td><td>A newer ECMAScript or Intl capability.</td><td>Strict throws TypeError; non-strict returns false.</td></tr>
+                                    <tr><td><span class="status web">Guarded Web API</span></td><td>A host API that may exist in browsers, workers, or newer Node versions.</td><td>Strict throws TypeError; non-strict returns false.</td></tr>
+                                    <tr><td><span class="status node">Node</span></td><td>Available only through <code>strong-type/node</code>.</td><td>The root import never loads Node built-ins.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="callout warning"><code>object(null)</code> remains true because JavaScript reports <code>typeof null === 'object'</code>. Use <code>nonNullObject</code> for the common non-null meaning.</div>
+                    </section>
+
+                    <section id="development" class="doc-section">
+                        <p class="section-kicker">12 · Development</p>
+                        <h2>Everything runs with Node itself.</h2>
+                        <div class="table-wrap">
+                            <table>
+                                <caption>npm commands</caption>
+                                <thead><tr><th scope="col">Command</th><th scope="col">What it does</th><th scope="col">Third-party tooling</th></tr></thead>
+                                <tbody>
+                                    <tr><td><code>npm test</code></td><td>Runs core, Node adapter, and documentation checks.</td><td>None</td></tr>
+                                    <tr><td><code>npm run test:core</code></td><td>Runs portable validator regression tests.</td><td>None</td></tr>
+                                    <tr><td><code>npm run test:node</code></td><td>Runs Node adapter and cross-realm tests.</td><td>None</td></tr>
+                                    <tr><td><code>npm run test:docs</code></td><td>Checks reference completeness and site integrity.</td><td>None</td></tr>
+                                    <tr><td><code>npm start</code></td><td>Serves the static site at localhost:8000.</td><td>None</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="brand"><span>{</span> strong-type <span>}</span></div>
+            <p>Native JavaScript type enforcement by Roshi _ _.</p>
+            <nav aria-label="Project links"><a href="https://www.npmjs.com/package/strong-type">npm</a><a href="https://github.com/RIAEvangelist/strong-type">GitHub</a><a href="https://github.com/RIAEvangelist/strong-type/blob/main/licence">MIT license</a></nav>
+        </footer>
     </body>
 </html>
