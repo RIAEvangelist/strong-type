@@ -11,7 +11,7 @@ npm strong-type info :  [See npm trends and stats for strong-type](http://npm-st
 
 ` npm install --save strong-type `  
 
-[![RIAEvangelist](https://avatars3.githubusercontent.com/u/369041?v=3&s=100)](https://github.com/RIAEvangelist)
+[![Roshi _ _](https://avatars3.githubusercontent.com/u/369041?v=3&s=100)](https://github.com/RIAEvangelist)
 
 GitHub info :  
 [![strong-type GitHub Release](https://img.shields.io/github/release/RIAEvangelist/strong-type.svg) ![GitHub license strong-type license](https://img.shields.io/github/license/RIAEvangelist/strong-type.svg) ![open issues for strong-type on GitHub](https://img.shields.io/github/issues/RIAEvangelist/strong-type.svg)](http://riaevangelist.github.io/strong-type/)
