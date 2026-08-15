@@ -33,25 +33,54 @@ const throws=function(check,constructor=Error){
     return error;
 };
 
-const nodeTestAvailable=function(){
+const vanillaTestAvailable=function(){
     if(typeof process === 'undefined' || !process.versions || !process.versions.node){
         return false;
     }
 
-    return process.env.STRONG_TYPE_TEST_LEGACY !== '1' && Number(process.versions.node.split('.')[0]) >= 18;
+    if(process.env.STRONG_TYPE_TEST_LEGACY === '1'){
+        return false;
+    }
+
+    const [major,minor]=process.versions.node.split('.').map(Number);
+    return major > 22 || (major === 22 && minor >= 12);
 };
 
-const runNative=async function(){
-    const module=await import('node:test');
-    await module.describe('strong-type',()=>{
-        for(const current of tests){
-            if(current.skip){
-                module.test(current.name,{skip:current.reason},()=>{});
-            }else{
-                module.test(current.name,current.check);
+const runVanilla=async function(){
+    const {default:VanillaTest}=await import('vanilla-test');
+    const runner=new VanillaTest;
+    let skipped=0;
+
+    for(const current of tests){
+        if(current.skip){
+            skipped++;
+            if(!quiet){
+                console.log(`- ${current.name} (${current.reason})`);
             }
+            continue;
         }
-    });
+
+        runner.expects(current.name);
+        try{
+            await current.check();
+            runner.pass();
+        }catch(err){
+            console.error(`✗ ${current.name}`);
+            console.error(err && err.stack ? err.stack : err);
+            runner.fail();
+        }finally{
+            runner.done();
+        }
+    }
+
+    const result=runner.report();
+    if(skipped && !quiet){
+        console.log(`${skipped} skipped`);
+    }
+    if(!result.ok){
+        process.exitCode=1;
+    }
+    return result;
 };
 
 const runFallback=async function(){
@@ -88,7 +117,7 @@ const runFallback=async function(){
 };
 
 const run=function(){
-    return nodeTestAvailable() ? runNative() : runFallback();
+    return vanillaTestAvailable() ? runVanilla() : runFallback();
 };
 
 export {assert,equal,run,skip,test,throws};

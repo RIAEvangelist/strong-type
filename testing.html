@@ -27,7 +27,7 @@
             <section id="testing" class="page-hero">
                 <p class="eyebrow">Tests &amp; coverage</p>
                 <h1>Quality is part of<br><span>the public API.</span></h1>
-                <p>The release suite uses native <code>node:test</code>. Coverage comes from Node’s built-in V8 reporter. Both run without third-party test or coverage packages.</p>
+                <p>The release suite uses <code>vanilla-test</code> 2.1.0. Coverage comes from Node’s built-in V8 reporter, while older supported Node releases use the local compatibility adapter.</p>
                 <div class="metric-grid">
                     <div><strong>597</strong><span>passed</span></div>
                     <div><strong>0</strong><span>failed</span></div>
@@ -92,7 +92,7 @@
                             <caption>GitHub Actions CI jobs</caption>
                             <thead><tr><th scope="col">Job group</th><th scope="col">Runtime / platform</th><th scope="col">Command</th><th scope="col">Purpose</th></tr></thead>
                             <tbody>
-                                <tr><td>Compatibility · 5 jobs</td><td>Node 12.21.0, 18, 20, 22, 24 · Ubuntu</td><td><code>npm test</code> or legacy adapter on Node 12</td><td>Syntax, imports, validators, and guarded capabilities.</td></tr>
+                                <tr><td>Compatibility · 5 jobs</td><td>Node 12.21.0, 18, 20, 22.12, 24 · Ubuntu</td><td>Compatibility adapter; primary runner at 22.12</td><td>Syntax, imports, validators, guarded capabilities, and the minimum supported <code>vanilla-test</code> runtime.</td></tr>
                                 <tr><td>Platforms · 3 jobs</td><td>Node 24 · Ubuntu, macOS, Windows</td><td><code>npm test</code></td><td>Cross-platform behavior.</td></tr>
                                 <tr><td>Native coverage · 1 job</td><td>Node 24 · Ubuntu</td><td><code>npm run coverage</code></td><td>Production-source metrics and enforced floors.</td></tr>
                                 <tr><td>Package · 1 job</td><td>Node 24 · Ubuntu</td><td><code>npm pack --dry-run</code></td><td>Published-file inspection.</td></tr>
@@ -104,18 +104,18 @@
 
                 <section id="commands" class="doc-section">
                     <p class="section-kicker">Run it yourself</p>
-                    <h2>No test toolchain install.</h2>
+                    <h2>One pinned test runner.</h2>
                     <div class="table-wrap">
                         <table>
                             <caption>Project commands</caption>
                             <thead><tr><th scope="col">Command</th><th scope="col">What it does</th><th scope="col">Third-party tooling</th></tr></thead>
                             <tbody>
-                                <tr><td><code>npm test</code></td><td>Runs all suites through native <code>node:test</code>.</td><td>None</td></tr>
-                                <tr><td><code>npm run test:core</code></td><td>Runs portable validator regression tests.</td><td>None</td></tr>
-                                <tr><td><code>npm run test:node</code></td><td>Runs Node adapter and cross-realm tests.</td><td>None</td></tr>
-                                <tr><td><code>npm run test:docs</code></td><td>Checks reference completeness and site integrity.</td><td>None</td></tr>
-                                <tr><td><code>npm run test:legacy</code></td><td>Runs the same registered cases through the Node 12 compatibility adapter.</td><td>None</td></tr>
-                                <tr><td><code>npm run coverage</code></td><td>Runs native V8 coverage and enforces release floors.</td><td>None</td></tr>
+                                <tr><td><code>npm test</code></td><td>Runs all suites through <code>vanilla-test</code>.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
+                                <tr><td><code>npm run test:core</code></td><td>Runs portable validator regression tests.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
+                                <tr><td><code>npm run test:node</code></td><td>Runs Node adapter and cross-realm tests.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
+                                <tr><td><code>npm run test:docs</code></td><td>Checks reference completeness and site integrity.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
+                                <tr><td><code>npm run test:legacy</code></td><td>Runs the same registered cases through the compatibility adapter.</td><td>None</td></tr>
+                                <tr><td><code>npm run coverage</code></td><td>Runs the suites under native V8 coverage and enforces release floors.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
                                 <tr><td><code>npm start</code></td><td>Serves the static site at localhost:8000.</td><td>None</td></tr>
                             </tbody>
                         </table>

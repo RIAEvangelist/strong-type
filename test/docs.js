@@ -129,28 +129,31 @@ test('the site loads no remote script, stylesheet, font, or image',()=>{
     equal(/@import\s+url\(\s*['"]?https?:\/\//i.test(read('../docs.css')),false);
 });
 
-test('the playground and package preserve native unbundled entry points',()=>{
+test('the playground and runtime package preserve native unbundled entry points',()=>{
     const frame=read('../playground/frame.html');
     const runner=read('../playground/runner.js');
     equal(frame.includes('"strong-type": "../index.js"'),true);
     equal(runner.includes("import Is from 'strong-type'"),true);
     equal(frame.includes('node.js'),false);
     equal(Object.prototype.hasOwnProperty.call(packageData,'dependencies'),false);
-    equal(Object.prototype.hasOwnProperty.call(packageData,'devDependencies'),false);
+    equal(Object.keys(packageData.devDependencies).length,1);
+    equal(packageData.devDependencies['vanilla-test'],'2.1.0');
     equal(packageData.exports['.'],'./index.js');
     equal(packageData.exports['./index.js'],'./index.js');
     equal(packageData.exports['./node'],'./node.js');
     equal(packageData.exports['./node.js'],'./node.js');
 });
 
-test('native tests, coverage gates, Pages files, and static assets are wired',()=>{
-    const files=['../docs.css','../docs.js','../docs/reference.js','../playground/frame.html','../playground/playground.css','../playground/runner.js','../assets/strong-type-header.png','../scripts/serve.js','../scripts/test.js'];
+test('vanilla-test, coverage gates, Pages files, and static assets are wired',()=>{
+    const files=['../docs.css','../docs.js','../docs/reference.js','../playground/frame.html','../playground/playground.css','../playground/runner.js','../assets/strong-type-header.png','../scripts/serve.js','../scripts/test.js','../test/harness.js','../node.cmd'];
     const missing=files.filter(path=>!fs.existsSync(new URL(path,import.meta.url)));
     equal(missing.length,0,`missing static files: ${missing.join(', ')}`);
-    equal(read('../scripts/test.js').includes("'--test'"),true);
+    equal(read('../test/harness.js').includes("import('vanilla-test')"),true);
     equal(packageData.scripts.coverage.includes('--experimental-test-coverage'),true);
     equal(packageData.scripts.coverage.includes('--test-coverage-functions=95'),true);
-    equal(read('../.github/workflows/ci.yml').includes('npm run coverage'),true);
+    const ciWorkflow=read('../.github/workflows/ci.yml');
+    equal(ciWorkflow.includes('npm run coverage'),true);
+    equal(ciWorkflow.includes('npm run test:legacy'),true);
     const pagesWorkflow=read('../.github/workflows/pages.yml');
     for(const pageName of pageNames){
         equal(pagesWorkflow.includes(pageName),true,`Pages workflow omits ${pageName}`);

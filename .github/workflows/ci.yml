@@ -22,6 +22,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24.x
+      - run: npm ci
       - run: npm test
 
   compatibility:
@@ -30,14 +31,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [12.21.0, 18.x, 20.x, 22.x, 24.x]
+        node: [12.21.0, 18.x, 20.x, 22.12.0, 24.x]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
       - run: node --version
-      - run: npm test
+      - if: matrix.node == '22.12.0'
+        run: npm ci
+      - if: matrix.node == '22.12.0'
+        run: npm test
+      - if: matrix.node != '22.12.0'
+        run: npm run test:legacy
 
   package:
     name: Package contents
@@ -47,6 +53,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24.x
+      - run: npm ci
       - run: npm pack --dry-run
 
   coverage:
@@ -57,4 +64,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24.x
+      - run: npm ci
       - run: npm run coverage

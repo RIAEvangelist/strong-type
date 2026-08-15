@@ -26,12 +26,7 @@ const execute=function(args,environment=process.env){
     }
 };
 
-const major=Number(process.versions.node.split('.')[0]);
-if(major >= 18 && !legacy){
-    execute(['--test',...files]);
-}else{
-    const environment={...process.env,STRONG_TYPE_TEST_LEGACY:'1'};
-    for(const file of files){
-        execute([file],environment);
-    }
+const environment=legacy ? {...process.env,STRONG_TYPE_TEST_LEGACY:'1'} : process.env;
+for(const file of files){
+    execute([file],environment);
 }

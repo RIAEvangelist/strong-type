@@ -4,7 +4,7 @@
 
 [Overview](https://riaevangelist.github.io/strong-type/) · [Validator reference](https://riaevangelist.github.io/strong-type/reference.html) · [Tests & coverage](https://riaevangelist.github.io/strong-type/testing.html) · [Playground](https://riaevangelist.github.io/strong-type/playground.html)
 
-[![npm version](https://img.shields.io/npm/v/strong-type.svg)](https://www.npmjs.com/package/strong-type) [![Node support](https://img.shields.io/node/v/strong-type.svg)](https://www.npmjs.com/package/strong-type) [![CI](https://github.com/RIAEvangelist/strong-type/actions/workflows/ci.yml/badge.svg)](https://github.com/RIAEvangelist/strong-type/actions/workflows/ci.yml) [![license](https://img.shields.io/github/license/RIAEvangelist/strong-type.svg)](./licence) [![dependencies](https://img.shields.io/badge/dependencies-0-70efa8)](./package.json)
+[![npm version](https://img.shields.io/npm/v/strong-type.svg)](https://www.npmjs.com/package/strong-type) [![Node support](https://img.shields.io/node/v/strong-type.svg)](https://www.npmjs.com/package/strong-type) [![CI](https://github.com/RIAEvangelist/strong-type/actions/workflows/ci.yml/badge.svg)](https://github.com/RIAEvangelist/strong-type/actions/workflows/ci.yml) [![license](https://img.shields.io/github/license/RIAEvangelist/strong-type.svg)](./licence) [![runtime dependencies](https://img.shields.io/badge/runtime_dependencies-0-70efa8)](./package.json)
 
 Native type enforcement for JavaScript. `strong-type` runs as the same untransformed ES module in browsers and Node. Strict checks throw a useful `TypeError`; non-strict checks return a boolean.
 
@@ -14,7 +14,7 @@ Native type enforcement for JavaScript. `strong-type` runs as the same untransfo
 |---|---|---|
 | Module format | Native ESM | The checked-in JavaScript is what the runtime executes. |
 | Runtime dependencies | None | No third-party production packages. |
-| Development dependencies | None | Tests and the local docs server use Node built-ins. |
+| Development dependencies | `vanilla-test` 2.1.0 | The exact test-runner pin is development-only; runtime installs remain dependency-free. |
 | Bundler | Not required | Browser and Node imports work directly. |
 | Transpiler | Not required | No generated CommonJS or compatibility copy. |
 | Default entry point | Isomorphic | `index.js` contains no `node:*` imports. |
@@ -363,13 +363,13 @@ Version 2 removes several coercive edge cases while retaining the original metho
 
 ## Tests and coverage
 
-The main suite runs with Node's built-in `node:test`. Node 12.21 uses the same registered cases through the small compatibility adapter because `node:test` did not exist in that release. There is no third-party test runner.
+The primary suite runs through `vanilla-test` 2.1.0 on Node 22.12 or newer, with CI exercising both that minimum and Node 24. Older supported Node releases run the same registered cases through the small dependency-free compatibility adapter, so the development runner does not change the package's runtime support or add production dependencies.
 
 | Test suite | Result on Node 24.18.0 | Covers |
 |---|---:|---|
 | Core validators | 533 passed · 13 guarded skips | 183 isomorphic validators, strict/non-strict behavior, hostile values, unions, and native brands |
 | Node adapter | 54 passed | 18 Node validators, cross-realm behavior, package entry points, streams, timers, crypto, and proxies |
-| Documentation | 10 passed | Complete method tables, local assets, zero dependencies, package paths, and bundle-free playground wiring |
+| Documentation | 10 passed | Complete method tables, local assets, zero runtime dependencies, pinned test tooling, package paths, and bundle-free playground wiring |
 | **Total** | **597 passed · 0 failed · 13 skipped** | Runtime and documentation contract |
 
 A guarded skip means the runtime does not expose that host API. It is a capability result, not an ignored failure.
@@ -394,12 +394,12 @@ Node's native reporter does not publish a statement metric. Test and documentati
 
 | Command | What it does | Third-party tooling |
 |---|---|---|
-| `npm test` | Runs core, Node adapter, and documentation checks through `node:test` | None |
-| `npm run test:core` | Runs portable validator regression tests through `node:test` | None |
-| `npm run test:node` | Runs Node adapter and cross-realm tests through `node:test` | None |
-| `npm run test:docs` | Checks reference completeness and site integrity through `node:test` | None |
-| `npm run test:legacy` | Runs the same registered cases on Node 12.21 | None |
-| `npm run coverage` | Runs native V8 coverage and enforces the 95/90/95 release floors | None |
+| `npm test` | Runs core, Node adapter, and documentation checks through `vanilla-test` | `vanilla-test` 2.1.0 |
+| `npm run test:core` | Runs portable validator regression tests through `vanilla-test` | `vanilla-test` 2.1.0 |
+| `npm run test:node` | Runs Node adapter and cross-realm tests through `vanilla-test` | `vanilla-test` 2.1.0 |
+| `npm run test:docs` | Checks reference completeness and site integrity through `vanilla-test` | `vanilla-test` 2.1.0 |
+| `npm run test:legacy` | Runs the same registered cases through the compatibility adapter | None |
+| `npm run coverage` | Runs the `vanilla-test` suites under native V8 coverage and enforces the 95/90/95 release floors | `vanilla-test` 2.1.0 |
 | `npm start` | Serves the docs and playground at `http://localhost:8000/` | None |
 | `npm run nodeExample` | Runs the Node example | None |
 

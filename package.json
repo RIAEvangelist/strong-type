@@ -57,5 +57,8 @@
   "bugs": {
     "url": "https://github.com/RIAEvangelist/strong-type/issues"
   },
-  "homepage": "https://riaevangelist.github.io/strong-type/"
+  "homepage": "https://riaevangelist.github.io/strong-type/",
+  "devDependencies": {
+    "vanilla-test": "2.1.0"
+  }
 }

@@ -66,7 +66,7 @@ is.string(value);    <span class="fail">// TypeError</span></code></pre>
                             <tr><td>Build step</td><td><span class="status pass">None</span></td><td>No bundler or transpiler is required.</td></tr>
                             <tr><td>Default entry</td><td><code>strong-type</code></td><td>Browser-safe and Node-safe.</td></tr>
                             <tr><td>Node entry</td><td><code>strong-type/node</code></td><td>Explicit Node built-ins and exact util checks.</td></tr>
-                            <tr><td>Tests</td><td><span class="status shared">node:test</span></td><td>597 passing checks plus guarded capability skips.</td></tr>
+                            <tr><td>Tests</td><td><span class="status shared">vanilla-test 2.1.0</span></td><td>597 passing checks plus guarded capability skips.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -156,8 +156,8 @@ is.number('42');                 // throws TypeError</code></pre></div>
 
             <section id="quality" class="section">
                 <p class="section-kicker">Tested in public</p>
-                <h2>Native tests. Native coverage.</h2>
-                <p>The release suite runs through <code>node:test</code>. Node 24’s built-in V8 coverage measures only the shipped runtime sources and enforces the release floors in CI.</p>
+                <h2>Web-standard tests. Native coverage.</h2>
+                <p>The release suite runs through <code>vanilla-test</code> 2.1.0. Node 24’s built-in V8 coverage measures only the shipped runtime sources and enforces the release floors in CI.</p>
                 <div class="metric-grid">
                     <div><strong>597</strong><span>passing checks</span></div>
                     <div><strong>95.85%</strong><span>line coverage</span></div>
