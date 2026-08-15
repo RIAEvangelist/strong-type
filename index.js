@@ -1083,11 +1083,15 @@ class Is{
     }
 
     performanceMark(value){
-        return this.globalInstanceCheck(value,'PerformanceMark');
+        const constructor=globalThis.PerformanceMark;
+        const pass=typeof constructor === 'function' ? instanceOf(value,constructor) : stringTagCheck(value,'PerformanceMark');
+        return this.check(value,pass,'PerformanceMark');
     }
 
     performanceMeasure(value){
-        return this.globalInstanceCheck(value,'PerformanceMeasure');
+        const constructor=globalThis.PerformanceMeasure;
+        const pass=typeof constructor === 'function' ? instanceOf(value,constructor) : stringTagCheck(value,'PerformanceMeasure');
+        return this.check(value,pass,'PerformanceMeasure');
     }
 
     performanceObserver(value){

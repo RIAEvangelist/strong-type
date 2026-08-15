@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="description" content="Complete strong-type validator reference for browser, shared JavaScript, and Node.">
+        <meta name="theme-color" content="#070a18">
+        <title>Validator reference — strong-type</title>
+        <link rel="stylesheet" href="./docs.css">
+        <script type="module" src="./docs.js"></script>
+    </head>
+    <body>
+        <a class="skip-link" href="#content">Skip to reference</a>
+        <header class="site-header">
+            <a class="brand" href="./" aria-label="strong-type home"><span>{</span> strong-type <span>}</span></a>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="top-nav">Menu</button>
+            <nav id="top-nav" class="top-nav" aria-label="Primary navigation">
+                <a href="./">Overview</a>
+                <a href="./reference.html" aria-current="page">Reference</a>
+                <a href="./testing.html">Tests &amp; coverage</a>
+                <a href="./playground.html">Playground</a>
+                <a href="https://github.com/RIAEvangelist/strong-type">GitHub</a>
+            </nav>
+        </header>
+
+        <main id="content">
+            <section id="reference" class="page-hero">
+                <p class="eyebrow">Complete API reference</p>
+                <h1>201 validators.<br><span>One searchable table set.</span></h1>
+                <p>Every public validator is listed exactly once, with what passes, an important edge, its runtime, and a runnable example.</p>
+            </section>
+
+            <div class="page-content">
+                <section id="types" class="doc-section reference-section">
+                    <p class="section-kicker">183 · Isomorphic core</p>
+                    <h2>Browser-safe and Node-safe validators.</h2>
+                    <p>Every method exists in every runtime. A guarded type that the host does not provide throws in strict mode and returns false in non-strict mode—never a missing-global ReferenceError.</p>
+                    <label class="filter-label" for="type-filter">Filter methods, accepted values, notes, or runtime</label>
+                    <input id="type-filter" class="type-filter" type="search" placeholder="Try: temporal, stream, bigint, Web API…" autocomplete="off">
+                    <p id="filter-status" class="filter-status" aria-live="polite"></p>
+                    <div id="validator-tables"></div>
+                </section>
+
+                <section id="core" class="doc-section">
+                    <p class="section-kicker">11 · Core and extension methods</p>
+                    <h2>Build checks in the same style.</h2>
+                    <div id="core-table" class="table-wrap"></div>
+                </section>
+
+                <section id="unions" class="doc-section">
+                    <p class="section-kicker">Unions</p>
+                    <h2>Accept one of several named validators.</h2>
+                    <div class="code-block"><div><span>JavaScript</span><button type="button" data-copy-target="union-code">Copy</button></div><pre id="union-code"><code>is.union('type','string|number');
+is.union(42,['string','number']);
+
+// Spaces are trimmed. Custom and Node validators work.
+nodeIs.union(Buffer.from('type'),'buffer|string');</code></pre></div>
+                    <div class="callout">Validator names are resolved only from the strong-type prototype chain. Inherited Object methods such as <code>toString</code> and multi-argument helper methods are rejected.</div>
+                </section>
+
+                <section id="node" class="doc-section">
+                    <p class="section-kicker">18 · Node adapter</p>
+                    <h2>Node precision stays opt-in.</h2>
+                    <p>The adapter extends the same <code>Is</code> class. It imports only Node built-ins. The browser playground intentionally never loads it.</p>
+                    <div class="code-block"><div><span>Node JavaScript</span><button type="button" data-copy-target="node-code">Copy</button></div><pre id="node-code"><code>import IsNode from 'strong-type/node';
+
+const is=new IsNode;
+
+is.buffer(Buffer.from('type'));
+is.proxy(new Proxy({},{}));
+is.nodeReadable(process.stdin);</code></pre></div>
+                    <div id="node-table" class="table-wrap"></div>
+                </section>
+
+                <section id="support" class="doc-section">
+                    <p class="section-kicker">Runtime labels</p>
+                    <h2>Stable methods. Guarded capabilities.</h2>
+                    <div class="table-wrap">
+                        <table>
+                            <caption>Runtime availability rules</caption>
+                            <thead><tr><th scope="col">Label</th><th scope="col">Availability</th><th scope="col">When unavailable</th></tr></thead>
+                            <tbody>
+                                <tr><td><span class="status shared">Shared</span></td><td>Standard JavaScript across supported Node and modern browsers.</td><td>Not normally applicable.</td></tr>
+                                <tr><td><span class="status guarded">Guarded standard</span></td><td>A newer ECMAScript or Intl capability.</td><td>Strict throws TypeError; non-strict returns false.</td></tr>
+                                <tr><td><span class="status web">Guarded Web API</span></td><td>A host API that may exist in browsers, workers, or newer Node versions.</td><td>Strict throws TypeError; non-strict returns false.</td></tr>
+                                <tr><td><span class="status node">Node</span></td><td>Available only through <code>strong-type/node</code>.</td><td>The root import never loads Node built-ins.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout warning"><code>object(null)</code> remains true because JavaScript reports <code>typeof null === 'object'</code>. Use <code>nonNullObject</code> for the common non-null meaning.</div>
+                </section>
+            </div>
+        </main>
+
+        <footer>
+            <div class="brand"><span>{</span> strong-type <span>}</span></div>
+            <p>Complete, table-first type documentation.</p>
+            <nav aria-label="Project links"><a href="./playground.html">Playground</a><a href="./testing.html">Tests</a><a href="https://github.com/RIAEvangelist/strong-type">GitHub</a></nav>
+        </footer>
+    </body>
+</html>

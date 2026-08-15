@@ -26,10 +26,12 @@
     "node": ">=12.21.0"
   },
   "scripts": {
-    "test": "node test/CI.js && node test/node.js && node test/docs.js",
-    "test:core": "node test/CI.js",
-    "test:node": "node test/node.js",
-    "test:docs": "node test/docs.js",
+    "test": "node scripts/test.js",
+    "test:core": "node scripts/test.js core",
+    "test:node": "node scripts/test.js node",
+    "test:docs": "node scripts/test.js docs",
+    "test:legacy": "node scripts/test.js legacy",
+    "coverage": "node --test --experimental-test-coverage --test-coverage-include=index.js --test-coverage-include=node.js --test-coverage-lines=95 --test-coverage-branches=90 --test-coverage-functions=95 test/CI.js test/node.js test/docs.js",
     "start": "node scripts/serve.js",
     "nodeExample": "node ./example/node/typecheck.js",
     "check": "npm test"

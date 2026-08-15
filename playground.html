@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="description" content="Run strong-type directly in a browser with native ESM and no bundler.">
+        <meta name="theme-color" content="#070a18">
+        <title>Playground — strong-type</title>
+        <link rel="stylesheet" href="./docs.css">
+        <script type="module" src="./docs.js"></script>
+    </head>
+    <body>
+        <a class="skip-link" href="#content">Skip to playground</a>
+        <header class="site-header">
+            <a class="brand" href="./" aria-label="strong-type home"><span>{</span> strong-type <span>}</span></a>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="top-nav">Menu</button>
+            <nav id="top-nav" class="top-nav" aria-label="Primary navigation">
+                <a href="./">Overview</a>
+                <a href="./reference.html">Reference</a>
+                <a href="./testing.html">Tests &amp; coverage</a>
+                <a href="./playground.html" aria-current="page">Playground</a>
+                <a href="https://github.com/RIAEvangelist/strong-type">GitHub</a>
+            </nav>
+        </header>
+
+        <main id="content">
+            <section class="page-hero">
+                <p class="eyebrow">Native module playground</p>
+                <h1>Edit the source.<br><span>Run the real module.</span></h1>
+                <p>The isolated editor imports the checked-in <code>index.js</code> through a native browser import map. There is no compiled playground copy.</p>
+            </section>
+
+            <div class="page-content">
+                <section id="playground" class="doc-section playground-section">
+                    <p class="section-kicker">Live editor</p>
+                    <h2>Press Run or Ctrl/⌘ + Enter.</h2>
+                    <iframe id="playground-frame" title="strong-type JavaScript playground" src="./playground/frame.html" sandbox="allow-scripts allow-same-origin"></iframe>
+                    <div class="callout">The playground loads only the shared browser-safe entry. Node adapter examples run in Node and are documented on the <a href="./reference.html#node">reference page</a>.</div>
+                </section>
+
+                <section id="recipes" class="doc-section">
+                    <p class="section-kicker">Recipes</p>
+                    <h2>Load a focused example.</h2>
+                    <div class="recipe-grid">
+                        <article>
+                            <h3>Strict and weak modes</h3>
+                            <div class="code-block"><div><span>JavaScript</span><button type="button" data-load-target="recipe-modes">Load</button></div><pre id="recipe-modes"><code>import Is from 'strong-type';
+
+const is=new Is;
+const weakIs=new Is(false);
+
+console.log(is.string('type'));
+console.log(weakIs.number('42'));
+
+try{
+    is.number('42');
+}catch(error){
+    console.error(error.message);
+}</code></pre></div>
+                        </article>
+                        <article>
+                            <h3>Unions and collections</h3>
+                            <div class="code-block"><div><span>JavaScript</span><button type="button" data-load-target="recipe-union">Load</button></div><pre id="recipe-union"><code>import Is from 'strong-type';
+
+const is=new Is;
+const values=[new Map,new Set,'type',42];
+
+for(const value of values){
+    console.log(
+        value,
+        is.union(value,'map|set|string|number')
+    );
+}</code></pre></div>
+                        </article>
+                        <article>
+                            <h3>Extend the validator</h3>
+                            <div class="code-block"><div><span>JavaScript</span><button type="button" data-load-target="recipe-extend">Load</button></div><pre id="recipe-extend"><code>import Is from 'strong-type';
+
+class Pizza{}
+
+class MyIs extends Is{
+    pizza(value){
+        return this.instanceCheck(value,Pizza);
+    }
+}
+
+const is=new MyIs;
+console.log(is.pizza(new Pizza));
+console.log(is.union(new Pizza,'pizza|string'));</code></pre></div>
+                        </article>
+                    </div>
+                </section>
+
+                <section id="browser-module" class="doc-section">
+                    <p class="section-kicker">Same pattern in your page</p>
+                    <h2>A normal module script is enough.</h2>
+                    <div class="code-block"><div><span>HTML</span><button type="button" data-copy-target="browser-script-code">Copy</button></div><pre id="browser-script-code"><code>&lt;script type="module"&gt;
+    import Is from 'https://riaevangelist.github.io/strong-type/index.js';
+
+    const is=new Is(false);
+    document.body.dataset.valid=String(is.string('strong-type'));
+&lt;/script&gt;</code></pre></div>
+                    <p>For local development, run <code>npm start</code> and open <code>http://localhost:8000/playground.html</code>.</p>
+                </section>
+            </div>
+        </main>
+
+        <footer>
+            <div class="brand"><span>{</span> strong-type <span>}</span></div>
+            <p>Real native ESM in an isolated browser frame.</p>
+            <nav aria-label="Project links"><a href="./reference.html">Reference</a><a href="./testing.html">Tests</a><a href="https://github.com/RIAEvangelist/strong-type">GitHub</a></nav>
+        </footer>
+    </body>
+</html>

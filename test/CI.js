@@ -319,12 +319,22 @@ if(Object.prototype.hasOwnProperty.call(globalThis,'performance')){
     if(typeof performance.mark === 'function'){
         verify('performanceMark',performance.mark('strong-type-test'),{});
         performance.clearMarks('strong-type-test');
+    }else{
+        guarded('performanceMark',false,()=>false);
     }
+    if(typeof performance.measure === 'function'){
+        verify('performanceMeasure',performance.measure('strong-type-test-measure'),{});
+        performance.clearMeasures('strong-type-test-measure');
+    }else{
+        guarded('performanceMeasure',false,()=>false);
+    }
+}else{
+    guarded('performanceMark',false,()=>false);
+    guarded('performanceMeasure',false,()=>false);
 }
 
 guarded('cryptoKey',globalThis.CryptoKey,constructor=>Object.create(constructor.prototype));
 guarded('performanceEntry',globalThis.PerformanceEntry,constructor=>Object.create(constructor.prototype));
-guarded('performanceMeasure',globalThis.PerformanceMeasure,constructor=>Object.create(constructor.prototype));
 guarded('performanceObserverEntryList',globalThis.PerformanceObserverEntryList,constructor=>Object.create(constructor.prototype));
 guarded('performanceResourceTiming',globalThis.PerformanceResourceTiming,constructor=>Object.create(constructor.prototype));
 
@@ -398,11 +408,11 @@ test('union supports custom validators and calls the winner once',()=>{
     equal(calls,1);
 });
 
-run().then(()=>{
+run().catch(err=>{
+    console.error(err);
+    process.exitCode=1;
+}).then(()=>{
     for(const close of cleanup){
         close();
     }
-}).catch(err=>{
-    console.error(err);
-    process.exitCode=1;
 });

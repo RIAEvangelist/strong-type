@@ -1,7 +1,4 @@
 const tests=[];
-let passed=0;
-let failed=0;
-let skipped=0;
 const quiet=typeof process !== 'undefined' && process.env.STRONG_TYPE_TEST_QUIET === '1';
 
 const test=function(name,check){
@@ -9,10 +6,7 @@ const test=function(name,check){
 };
 
 const skip=function(name,reason){
-    skipped++;
-    if(!quiet){
-        console.log(`- ${name} (${reason})`);
-    }
+    tests.push({name,reason,skip:true});
 };
 
 const assert=function(value,message='assertion failed'){
@@ -39,8 +33,41 @@ const throws=function(check,constructor=Error){
     return error;
 };
 
-const run=async function(){
+const nodeTestAvailable=function(){
+    if(typeof process === 'undefined' || !process.versions || !process.versions.node){
+        return false;
+    }
+
+    return process.env.STRONG_TYPE_TEST_LEGACY !== '1' && Number(process.versions.node.split('.')[0]) >= 18;
+};
+
+const runNative=async function(){
+    const module=await import('node:test');
+    await module.describe('strong-type',()=>{
+        for(const current of tests){
+            if(current.skip){
+                module.test(current.name,{skip:current.reason},()=>{});
+            }else{
+                module.test(current.name,current.check);
+            }
+        }
+    });
+};
+
+const runFallback=async function(){
+    let passed=0;
+    let failed=0;
+    let skipped=0;
+
     for(const current of tests){
+        if(current.skip){
+            skipped++;
+            if(!quiet){
+                console.log(`- ${current.name} (${current.reason})`);
+            }
+            continue;
+        }
+
         try{
             await current.check();
             passed++;
@@ -58,6 +85,10 @@ const run=async function(){
     if(failed){
         process.exitCode=1;
     }
+};
+
+const run=function(){
+    return nodeTestAvailable() ? runNative() : runFallback();
 };
 
 export {assert,equal,run,skip,test,throws};

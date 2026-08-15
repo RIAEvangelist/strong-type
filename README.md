@@ -2,7 +2,7 @@
 
 # strong-type
 
-[Documentation and live playground](https://riaevangelist.github.io/strong-type/)
+[Overview](https://riaevangelist.github.io/strong-type/) · [Validator reference](https://riaevangelist.github.io/strong-type/reference.html) · [Tests & coverage](https://riaevangelist.github.io/strong-type/testing.html) · [Playground](https://riaevangelist.github.io/strong-type/playground.html)
 
 [![npm version](https://img.shields.io/npm/v/strong-type.svg)](https://www.npmjs.com/package/strong-type) [![Node support](https://img.shields.io/node/v/strong-type.svg)](https://www.npmjs.com/package/strong-type) [![CI](https://github.com/RIAEvangelist/strong-type/actions/workflows/ci.yml/badge.svg)](https://github.com/RIAEvangelist/strong-type/actions/workflows/ci.yml) [![license](https://img.shields.io/github/license/RIAEvangelist/strong-type.svg)](./licence) [![dependencies](https://img.shields.io/badge/dependencies-0-70efa8)](./package.json)
 
@@ -60,7 +60,7 @@ Every advertised method exists in every runtime. When a guarded platform capabil
 
 ## Validator reference
 
-The default isomorphic entry exposes 183 validators. The Node adapter adds 18, for 201 documented validators total. The [website reference](https://riaevangelist.github.io/strong-type/#types) gives every method its own searchable row with an example, edge case, and runtime label.
+The default isomorphic entry exposes 183 validators. The Node adapter adds 18, for 201 documented validators total. The [website reference](https://riaevangelist.github.io/strong-type/reference.html) gives every method its own searchable row with an example, edge case, and runtime label.
 
 ### Values, primitives, and numbers
 
@@ -307,13 +307,18 @@ Use a native import map. Serve the files over HTTP; browsers do not load ES modu
 </script>
 ```
 
-You can also import the source directly from your own path:
+You can also import the source directly in a native module script:
 
-```js
-import Is from './node_modules/strong-type/index.js';
+```html
+<script type="module">
+    import Is from 'https://riaevangelist.github.io/strong-type/index.js';
+
+    const is=new Is;
+    console.log(is.string('native ESM'));
+</script>
 ```
 
-No bundle, transform, runtime shim, or host switch is involved.
+Use your own hosted path instead of the project Pages URL when you want to serve the file yourself. No bundle, transform, runtime shim, or host switch is involved.
 
 ## Extend strong-type
 
@@ -356,14 +361,45 @@ Version 2 removes several coercive edge cases while retaining the original metho
 | `union(value,'toString')` | Could call an inherited method | Rejected |
 | Subclass validators in `union` | Lost by constructing base `Is` | Preserved |
 
+## Tests and coverage
+
+The main suite runs with Node's built-in `node:test`. Node 12.21 uses the same registered cases through the small compatibility adapter because `node:test` did not exist in that release. There is no third-party test runner.
+
+| Test suite | Result on Node 24.18.0 | Covers |
+|---|---:|---|
+| Core validators | 533 passed · 13 guarded skips | 183 isomorphic validators, strict/non-strict behavior, hostile values, unions, and native brands |
+| Node adapter | 54 passed | 18 Node validators, cross-realm behavior, package entry points, streams, timers, crypto, and proxies |
+| Documentation | 10 passed | Complete method tables, local assets, zero dependencies, package paths, and bundle-free playground wiring |
+| **Total** | **597 passed · 0 failed · 13 skipped** | Runtime and documentation contract |
+
+A guarded skip means the runtime does not expose that host API. It is a capability result, not an ignored failure.
+
+Coverage uses Node 24's built-in V8 reporter and includes only the two shipped runtime sources.
+
+| Source | Lines | Branches | Functions |
+|---|---:|---:|---:|
+| `index.js` | 95.74% · 1102/1151 | 91.37% · 286/313 | 99.57% · 229/230 |
+| `node.js` | 96.80% · 121/125 | 93.75% · 30/32 | 91.30% · 21/23 |
+| **Total** | **95.85% · 1223/1276** | **91.59% · 316/345** | **98.81% · 250/253** |
+
+| Metric | Current | CI floor |
+|---|---:|---:|
+| Lines | 95.85% | 95% |
+| Branches | 91.59% | 90% |
+| Functions | 98.81% | 95% |
+
+Node's native reporter does not publish a statement metric. Test and documentation files are excluded from the percentages. See the [full test, coverage, and CI explanation](https://riaevangelist.github.io/strong-type/testing.html).
+
 ## Commands
 
 | Command | What it does | Third-party tooling |
 |---|---|---|
-| `npm test` | Runs core, Node adapter, and documentation checks | None |
-| `npm run test:core` | Runs portable validator regression tests | None |
-| `npm run test:node` | Runs Node adapter and cross-realm tests | None |
-| `npm run test:docs` | Checks reference completeness and site integrity | None |
+| `npm test` | Runs core, Node adapter, and documentation checks through `node:test` | None |
+| `npm run test:core` | Runs portable validator regression tests through `node:test` | None |
+| `npm run test:node` | Runs Node adapter and cross-realm tests through `node:test` | None |
+| `npm run test:docs` | Checks reference completeness and site integrity through `node:test` | None |
+| `npm run test:legacy` | Runs the same registered cases on Node 12.21 | None |
+| `npm run coverage` | Runs native V8 coverage and enforces the 95/90/95 release floors | None |
 | `npm start` | Serves the docs and playground at `http://localhost:8000/` | None |
 | `npm run nodeExample` | Runs the Node example | None |
 

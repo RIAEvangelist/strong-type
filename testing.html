@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="description" content="strong-type test suites, native Node coverage, quality gates, and CI runtime matrix.">
+        <meta name="theme-color" content="#070a18">
+        <title>Tests and coverage — strong-type</title>
+        <link rel="stylesheet" href="./docs.css">
+        <script type="module" src="./docs.js"></script>
+    </head>
+    <body>
+        <a class="skip-link" href="#content">Skip to test results</a>
+        <header class="site-header">
+            <a class="brand" href="./" aria-label="strong-type home"><span>{</span> strong-type <span>}</span></a>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="top-nav">Menu</button>
+            <nav id="top-nav" class="top-nav" aria-label="Primary navigation">
+                <a href="./">Overview</a>
+                <a href="./reference.html">Reference</a>
+                <a href="./testing.html" aria-current="page">Tests &amp; coverage</a>
+                <a href="./playground.html">Playground</a>
+                <a href="https://github.com/RIAEvangelist/strong-type">GitHub</a>
+            </nav>
+        </header>
+
+        <main id="content">
+            <section id="testing" class="page-hero">
+                <p class="eyebrow">Tests &amp; coverage</p>
+                <h1>Quality is part of<br><span>the public API.</span></h1>
+                <p>The release suite uses native <code>node:test</code>. Coverage comes from Node’s built-in V8 reporter. Both run without third-party test or coverage packages.</p>
+                <div class="metric-grid">
+                    <div><strong>597</strong><span>passed</span></div>
+                    <div><strong>0</strong><span>failed</span></div>
+                    <div><strong>13</strong><span>guarded skips</span></div>
+                    <div><strong>10</strong><span>CI jobs</span></div>
+                </div>
+            </section>
+
+            <div class="page-content">
+                <section id="coverage" class="doc-section">
+                    <p class="section-kicker">Native V8 coverage</p>
+                    <h2>Current production-source coverage.</h2>
+                    <p>Measured on Node 24.18.0 after the full core, Node adapter, and documentation suites. Only the shipped runtime files are included.</p>
+                    <div class="table-wrap">
+                        <table>
+                            <caption>Coverage by shipped source file</caption>
+                            <thead><tr><th scope="col">Source</th><th scope="col">Lines</th><th scope="col">Branches</th><th scope="col">Functions</th></tr></thead>
+                            <tbody>
+                                <tr><td><code>index.js</code></td><td>95.74% · 1102/1151</td><td>91.37% · 286/313</td><td>99.57% · 229/230</td></tr>
+                                <tr><td><code>node.js</code></td><td>96.80% · 121/125</td><td>93.75% · 30/32</td><td>91.30% · 21/23</td></tr>
+                                <tr><td><strong>Total</strong></td><td><strong>95.85% · 1223/1276</strong></td><td><strong>91.59% · 316/345</strong></td><td><strong>98.81% · 250/253</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <caption>Coverage release gates</caption>
+                            <thead><tr><th scope="col">Metric</th><th scope="col">Current</th><th scope="col">CI floor</th><th scope="col">Status</th></tr></thead>
+                            <tbody>
+                                <tr><td>Lines</td><td>95.85%</td><td>95%</td><td><span class="status pass">Pass</span></td></tr>
+                                <tr><td>Branches</td><td>91.59%</td><td>90%</td><td><span class="status pass">Pass</span></td></tr>
+                                <tr><td>Functions</td><td>98.81%</td><td>95%</td><td><span class="status pass">Pass</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout">Node’s native reporter does not publish a statement metric. Test files, documentation files, and static site files are excluded from these production-source percentages.</div>
+                </section>
+
+                <section id="suites" class="doc-section">
+                    <p class="section-kicker">Test suites</p>
+                    <h2>Every public surface has a contract.</h2>
+                    <div class="table-wrap">
+                        <table>
+                            <caption>Node 24.18.0 test snapshot</caption>
+                            <thead><tr><th scope="col">Suite</th><th scope="col">Result</th><th scope="col">What it covers</th></tr></thead>
+                            <tbody>
+                                <tr><td>Core validators</td><td>533 passed · 13 guarded skips</td><td>183 isomorphic validators, strict/non-strict behavior, hostile values, unions, and native brands.</td></tr>
+                                <tr><td>Node adapter</td><td>54 passed</td><td>18 Node validators, cross-realm values, package self-exports, proxies, timers, streams, and crypto.</td></tr>
+                                <tr><td>Documentation</td><td>10 passed</td><td>Complete method tables, local assets, dependency policy, package paths, and bundle-free playground wiring.</td></tr>
+                                <tr><td><strong>Total</strong></td><td><strong>597 passed · 0 failed · 13 skipped</strong></td><td>Runtime and documentation contract.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="callout warning">A guarded skip means the current runtime does not expose that host API. It is a capability result, not an ignored failure.</div>
+                </section>
+
+                <section id="ci" class="doc-section">
+                    <p class="section-kicker">Compatibility matrix</p>
+                    <h2>Oldest supported Node. Current platforms.</h2>
+                    <div class="table-wrap">
+                        <table>
+                            <caption>GitHub Actions CI jobs</caption>
+                            <thead><tr><th scope="col">Job group</th><th scope="col">Runtime / platform</th><th scope="col">Command</th><th scope="col">Purpose</th></tr></thead>
+                            <tbody>
+                                <tr><td>Compatibility · 5 jobs</td><td>Node 12.21.0, 18, 20, 22, 24 · Ubuntu</td><td><code>npm test</code> or legacy adapter on Node 12</td><td>Syntax, imports, validators, and guarded capabilities.</td></tr>
+                                <tr><td>Platforms · 3 jobs</td><td>Node 24 · Ubuntu, macOS, Windows</td><td><code>npm test</code></td><td>Cross-platform behavior.</td></tr>
+                                <tr><td>Native coverage · 1 job</td><td>Node 24 · Ubuntu</td><td><code>npm run coverage</code></td><td>Production-source metrics and enforced floors.</td></tr>
+                                <tr><td>Package · 1 job</td><td>Node 24 · Ubuntu</td><td><code>npm pack --dry-run</code></td><td>Published-file inspection.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p><a class="button" href="https://github.com/RIAEvangelist/strong-type/actions/workflows/ci.yml">Open current CI results</a></p>
+                </section>
+
+                <section id="commands" class="doc-section">
+                    <p class="section-kicker">Run it yourself</p>
+                    <h2>No test toolchain install.</h2>
+                    <div class="table-wrap">
+                        <table>
+                            <caption>Project commands</caption>
+                            <thead><tr><th scope="col">Command</th><th scope="col">What it does</th><th scope="col">Third-party tooling</th></tr></thead>
+                            <tbody>
+                                <tr><td><code>npm test</code></td><td>Runs all suites through native <code>node:test</code>.</td><td>None</td></tr>
+                                <tr><td><code>npm run test:core</code></td><td>Runs portable validator regression tests.</td><td>None</td></tr>
+                                <tr><td><code>npm run test:node</code></td><td>Runs Node adapter and cross-realm tests.</td><td>None</td></tr>
+                                <tr><td><code>npm run test:docs</code></td><td>Checks reference completeness and site integrity.</td><td>None</td></tr>
+                                <tr><td><code>npm run test:legacy</code></td><td>Runs the same registered cases through the Node 12 compatibility adapter.</td><td>None</td></tr>
+                                <tr><td><code>npm run coverage</code></td><td>Runs native V8 coverage and enforces release floors.</td><td>None</td></tr>
+                                <tr><td><code>npm start</code></td><td>Serves the static site at localhost:8000.</td><td>None</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="code-block"><div><span>Terminal</span><button type="button" data-copy="npm test &amp;&amp; npm run coverage">Copy</button></div><pre><code>npm test
+npm run coverage</code></pre></div>
+                </section>
+
+                <section id="limits" class="doc-section">
+                    <p class="section-kicker">Coverage boundaries</p>
+                    <h2>What these numbers do—and do not—say.</h2>
+                    <div class="table-wrap">
+                        <table>
+                            <caption>Measurement boundaries</caption>
+                            <thead><tr><th scope="col">Area</th><th scope="col">Measured here</th><th scope="col">Detail</th></tr></thead>
+                            <tbody>
+                                <tr><td>Core and Node source</td><td><span class="status pass">Yes</span></td><td>Line, branch, and function coverage from V8.</td></tr>
+                                <tr><td>Browser runtime</td><td><span class="status guarded">Not numerical</span></td><td>The source is browser-safe and the playground wiring is statically checked; this report is Node/V8 coverage.</td></tr>
+                                <tr><td>Unavailable host APIs</td><td><span class="status guarded">Guard tested</span></td><td>Strict TypeError and weak false behavior are checked when a capability is absent.</td></tr>
+                                <tr><td>UI rendering</td><td><span class="status guarded">Not automated</span></td><td>Local links/assets are checked; no browser automation dependency is installed.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer>
+            <div class="brand"><span>{</span> strong-type <span>}</span></div>
+            <p>Measured with the runtime itself.</p>
+            <nav aria-label="Project links"><a href="./reference.html">Reference</a><a href="./playground.html">Playground</a><a href="https://github.com/RIAEvangelist/strong-type">GitHub</a></nav>
+        </footer>
+    </body>
+</html>
