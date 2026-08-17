@@ -1,32 +1,20 @@
-import {spawnSync} from 'child_process';
+import {runSuites} from '../test/entry.js';
+import {suiteNames,suites} from '../test/suites.js';
 
-const groups={
-    all:['test/CI.js','test/node.js','test/docs.js'],
-    core:['test/CI.js'],
-    node:['test/node.js'],
-    docs:['test/docs.js']
-};
-
-const requested=process.argv[2] || 'all';
+const requested=process.argv[2];
 const legacy=requested === 'legacy';
-const files=legacy ? groups.all : groups[requested];
+const selected=!requested || legacy ? suiteNames : [requested];
 
-if(!files){
-    console.error(`unknown test group: ${requested}`);
+if(!legacy && requested && !Object.prototype.hasOwnProperty.call(suites,requested)){
+    console.error(`unknown test suite: ${requested}`);
     process.exit(1);
 }
 
-const execute=function(args,environment=process.env){
-    const result=spawnSync(process.execPath,args,{env:environment,stdio:'inherit'});
-    if(result.error){
-        throw result.error;
-    }
-    if(result.status !== 0){
-        process.exit(result.status === null ? 1 : result.status);
-    }
-};
-
-const environment=legacy ? {...process.env,STRONG_TYPE_TEST_LEGACY:'1'} : process.env;
-for(const file of files){
-    execute([file],environment);
+if(legacy){
+    process.env.STRONG_TYPE_TEST_LEGACY='1';
 }
+
+runSuites(selected).catch(err=>{
+    console.error(err && err.stack ? err.stack : err);
+    process.exitCode=1;
+});

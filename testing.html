@@ -27,9 +27,9 @@
             <section id="testing" class="page-hero">
                 <p class="eyebrow">Tests &amp; coverage</p>
                 <h1>Quality is part of<br><span>the public API.</span></h1>
-                <p>The release suite uses <code>vanilla-test</code> 2.1.0. Coverage comes from Node’s built-in V8 reporter, while older supported Node releases use the local compatibility adapter.</p>
+                <p>One canonical registry assigns every test once to Unit, Functional, Integration, or Regression. <code>vanilla-test</code> 2.1.0 runs it directly and collects native V8 coverage, while older supported Node releases use the local compatibility adapter.</p>
                 <div class="metric-grid">
-                    <div><strong>597</strong><span>passed</span></div>
+                    <div><strong>1,178</strong><span>passed</span></div>
                     <div><strong>0</strong><span>failed</span></div>
                     <div><strong>13</strong><span>guarded skips</span></div>
                     <div><strong>10</strong><span>CI jobs</span></div>
@@ -40,44 +40,46 @@
                 <section id="coverage" class="doc-section">
                     <p class="section-kicker">Native V8 coverage</p>
                     <h2>Current production-source coverage.</h2>
-                    <p>Measured on Node 24.18.0 after the full core, Node adapter, and documentation suites. Only the shipped runtime files are included.</p>
+                    <p>Measured on Node 24.18.0 after the full four-suite registry. Only the two shipped runtime files are included.</p>
                     <div class="table-wrap">
                         <table>
                             <caption>Coverage by shipped source file</caption>
-                            <thead><tr><th scope="col">Source</th><th scope="col">Lines</th><th scope="col">Branches</th><th scope="col">Functions</th></tr></thead>
+                            <thead><tr><th scope="col">Source</th><th scope="col">Executable ranges</th><th scope="col">Block ranges</th><th scope="col">Function ranges</th><th scope="col">Executable lines</th></tr></thead>
                             <tbody>
-                                <tr><td><code>index.js</code></td><td>95.74% · 1102/1151</td><td>91.37% · 286/313</td><td>99.57% · 229/230</td></tr>
-                                <tr><td><code>node.js</code></td><td>96.80% · 121/125</td><td>93.75% · 30/32</td><td>91.30% · 21/23</td></tr>
-                                <tr><td><strong>Total</strong></td><td><strong>95.85% · 1223/1276</strong></td><td><strong>91.59% · 316/345</strong></td><td><strong>98.81% · 250/253</strong></td></tr>
+                                <tr><td><code>index.js</code></td><td>91.05% · 285/313</td><td>67.07% · 55/82</td><td>99.56% · 230/231</td><td>91.60% · 829/905</td></tr>
+                                <tr><td><code>node.js</code></td><td>88.23% · 30/34</td><td>80.00% · 8/10</td><td>91.66% · 22/24</td><td>91.91% · 91/99</td></tr>
+                                <tr><td><strong>Total</strong></td><td><strong>90.77% · 315/347</strong></td><td><strong>68.47% · 63/92</strong></td><td><strong>98.82% · 252/255</strong></td><td><strong>91.63% · 920/1004</strong></td></tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="table-wrap">
                         <table>
                             <caption>Coverage release gates</caption>
-                            <thead><tr><th scope="col">Metric</th><th scope="col">Current</th><th scope="col">CI floor</th><th scope="col">Status</th></tr></thead>
+                            <thead><tr><th scope="col">Per-file gate</th><th scope="col">Lowest current file</th><th scope="col">Required</th><th scope="col">Status</th></tr></thead>
                             <tbody>
-                                <tr><td>Lines</td><td>95.85%</td><td>95%</td><td><span class="status pass">Pass</span></td></tr>
-                                <tr><td>Branches</td><td>91.59%</td><td>90%</td><td><span class="status pass">Pass</span></td></tr>
-                                <tr><td>Functions</td><td>98.81%</td><td>95%</td><td><span class="status pass">Pass</span></td></tr>
+                                <tr><td>Executable ranges</td><td>88.23%</td><td>85%</td><td><span class="status pass">Pass</span></td></tr>
+                                <tr><td>Block ranges</td><td>67.07%</td><td>65%</td><td><span class="status pass">Pass</span></td></tr>
+                                <tr><td>Function ranges</td><td>91.66%</td><td>90%</td><td><span class="status pass">Pass</span></td></tr>
+                                <tr><td>Executable lines</td><td>91.60%</td><td>90%</td><td><span class="status pass">Pass</span></td></tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="callout">Node’s native reporter does not publish a statement metric. Test files, documentation files, and static site files are excluded from these production-source percentages.</div>
+                    <div class="callout">VanillaTest reports the executable and block ranges emitted directly by V8. Those native range metrics are not interchangeable with parser-derived statement or branch counts. Test, documentation, and static-site files are excluded.</div>
                 </section>
 
                 <section id="suites" class="doc-section">
                     <p class="section-kicker">Test suites</p>
-                    <h2>Every public surface has a contract.</h2>
+                    <h2>Four suites. One owner for every test.</h2>
                     <div class="table-wrap">
                         <table>
                             <caption>Node 24.18.0 test snapshot</caption>
                             <thead><tr><th scope="col">Suite</th><th scope="col">Result</th><th scope="col">What it covers</th></tr></thead>
                             <tbody>
-                                <tr><td>Core validators</td><td>533 passed · 13 guarded skips</td><td>183 isomorphic validators, strict/non-strict behavior, hostile values, unions, and native brands.</td></tr>
-                                <tr><td>Node adapter</td><td>54 passed</td><td>18 Node validators, cross-realm values, package self-exports, proxies, timers, streams, and crypto.</td></tr>
-                                <tr><td>Documentation</td><td>10 passed</td><td>Complete method tables, local assets, dependency policy, package paths, and bundle-free playground wiring.</td></tr>
-                                <tr><td><strong>Total</strong></td><td><strong>597 passed · 0 failed · 13 skipped</strong></td><td>Runtime and documentation contract.</td></tr>
+                                <tr><td>Unit</td><td>586 passed · 13 guarded skips</td><td>Atomic validator contracts across all 201 core and Node validators, including guarded capabilities.</td></tr>
+                                <tr><td>Functional</td><td>15 passed</td><td>Strict and non-strict modes, unions, custom validators, and Node adapter inheritance.</td></tr>
+                                <tr><td>Integration</td><td>554 passed</td><td>Reference and README completeness, local links, package exports, coverage configuration, and CI wiring.</td></tr>
+                                <tr><td>Regression</td><td>23 passed</td><td>Coercion fixes, cross-realm brands, spoof resistance, revoked proxies, and cleanup resilience.</td></tr>
+                                <tr><td><strong>Total</strong></td><td><strong>1,178 passed · 0 failed · 13 skipped</strong></td><td>Four exclusive suites from one non-duplicative registry.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -110,12 +112,13 @@
                             <caption>Project commands</caption>
                             <thead><tr><th scope="col">Command</th><th scope="col">What it does</th><th scope="col">Third-party tooling</th></tr></thead>
                             <tbody>
-                                <tr><td><code>npm test</code></td><td>Runs all suites through <code>vanilla-test</code>.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
-                                <tr><td><code>npm run test:core</code></td><td>Runs portable validator regression tests.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
-                                <tr><td><code>npm run test:node</code></td><td>Runs Node adapter and cross-realm tests.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
-                                <tr><td><code>npm run test:docs</code></td><td>Checks reference completeness and site integrity.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
+                                <tr><td><code>npm test</code></td><td>Runs all four suites from the canonical registry.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
+                                <tr><td><code>npm run test:unit</code></td><td>Runs atomic core and Node validator contracts.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
+                                <tr><td><code>npm run test:functional</code></td><td>Runs public mode, union, and adapter workflows.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
+                                <tr><td><code>npm run test:integration</code></td><td>Runs documentation, package, site, and tooling boundaries.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
+                                <tr><td><code>npm run test:regression</code></td><td>Runs corrected edge cases and hostile-value protections.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
                                 <tr><td><code>npm run test:legacy</code></td><td>Runs the same registered cases through the compatibility adapter.</td><td>None</td></tr>
-                                <tr><td><code>npm run coverage</code></td><td>Runs the suites under native V8 coverage and enforces release floors.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
+                                <tr><td><code>npm run coverage</code></td><td>Runs the canonical registry through VanillaTest’s native Node V8 collector.</td><td><code>vanilla-test</code> 2.1.0</td></tr>
                                 <tr><td><code>npm start</code></td><td>Serves the static site at localhost:8000.</td><td>None</td></tr>
                             </tbody>
                         </table>
@@ -132,7 +135,7 @@ npm run coverage</code></pre></div>
                             <caption>Measurement boundaries</caption>
                             <thead><tr><th scope="col">Area</th><th scope="col">Measured here</th><th scope="col">Detail</th></tr></thead>
                             <tbody>
-                                <tr><td>Core and Node source</td><td><span class="status pass">Yes</span></td><td>Line, branch, and function coverage from V8.</td></tr>
+                                <tr><td>Core and Node source</td><td><span class="status pass">Yes</span></td><td>Executable-range, block-range, function-range, and executable-line coverage from V8.</td></tr>
                                 <tr><td>Browser runtime</td><td><span class="status guarded">Not numerical</span></td><td>The source is browser-safe and the playground wiring is statically checked; this report is Node/V8 coverage.</td></tr>
                                 <tr><td>Unavailable host APIs</td><td><span class="status guarded">Guard tested</span></td><td>Strict TypeError and weak false behavior are checked when a capability is absent.</td></tr>
                                 <tr><td>UI rendering</td><td><span class="status guarded">Not automated</span></td><td>Local links/assets are checked; no browser automation dependency is installed.</td></tr>

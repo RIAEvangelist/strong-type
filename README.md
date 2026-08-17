@@ -363,43 +363,46 @@ Version 2 removes several coercive edge cases while retaining the original metho
 
 ## Tests and coverage
 
-The primary suite runs through `vanilla-test` 2.1.0 on Node 22.12 or newer, with CI exercising both that minimum and Node 24. Older supported Node releases run the same registered cases through the small dependency-free compatibility adapter, so the development runner does not change the package's runtime support or add production dependencies.
+One canonical registry runs through `vanilla-test` 2.1.0 on Node 22.12 or newer, with every expectation assigned once to Unit, Functional, Integration, or Regression. CI exercises both the minimum VanillaTest runtime and Node 24. Older supported Node releases run that same registry through the small dependency-free compatibility adapter, so the development runner does not change the package's runtime support or add production dependencies.
 
 | Test suite | Result on Node 24.18.0 | Covers |
 |---|---:|---|
-| Core validators | 533 passed · 13 guarded skips | 183 isomorphic validators, strict/non-strict behavior, hostile values, unions, and native brands |
-| Node adapter | 54 passed | 18 Node validators, cross-realm behavior, package entry points, streams, timers, crypto, and proxies |
-| Documentation | 10 passed | Complete method tables, local assets, zero runtime dependencies, pinned test tooling, package paths, and bundle-free playground wiring |
-| **Total** | **597 passed · 0 failed · 13 skipped** | Runtime and documentation contract |
+| Unit | 586 passed · 13 guarded skips | Atomic validator contracts across all 201 core and Node validators, including guarded capabilities |
+| Functional | 15 passed | Strict and non-strict modes, unions, custom validators, and Node adapter inheritance |
+| Integration | 554 passed | Reference and README completeness, site links, package exports, coverage configuration, and CI wiring |
+| Regression | 23 passed | Coercion fixes, cross-realm brands, spoof resistance, revoked proxies, and cleanup resilience |
+| **Total** | **1,178 passed · 0 failed · 13 skipped** | Four exclusive suites from one non-duplicative registry |
 
 A guarded skip means the runtime does not expose that host API. It is a capability result, not an ignored failure.
 
-Coverage uses Node 24's built-in V8 reporter and includes only the two shipped runtime sources.
+Coverage uses VanillaTest's native Node V8 collector and includes only the two shipped runtime sources. Its executable-range and block-range metrics come directly from V8 and are not interchangeable with parser-derived statement or branch percentages.
 
-| Source | Lines | Branches | Functions |
-|---|---:|---:|---:|
-| `index.js` | 95.74% · 1102/1151 | 91.37% · 286/313 | 99.57% · 229/230 |
-| `node.js` | 96.80% · 121/125 | 93.75% · 30/32 | 91.30% · 21/23 |
-| **Total** | **95.85% · 1223/1276** | **91.59% · 316/345** | **98.81% · 250/253** |
+| Source | Executable ranges | Block ranges | Function ranges | Executable lines |
+|---|---:|---:|---:|---:|
+| `index.js` | 91.05% · 285/313 | 67.07% · 55/82 | 99.56% · 230/231 | 91.60% · 829/905 |
+| `node.js` | 88.23% · 30/34 | 80.00% · 8/10 | 91.66% · 22/24 | 91.91% · 91/99 |
+| **Total** | **90.77% · 315/347** | **68.47% · 63/92** | **98.82% · 252/255** | **91.63% · 920/1004** |
 
-| Metric | Current | CI floor |
+| Per-file gate | Lowest current file | Required |
 |---|---:|---:|
-| Lines | 95.85% | 95% |
-| Branches | 91.59% | 90% |
-| Functions | 98.81% | 95% |
+| Executable ranges | 88.23% | 85% |
+| Block ranges | 67.07% | 65% |
+| Function ranges | 91.66% | 90% |
+| Executable lines | 91.60% | 90% |
 
-Node's native reporter does not publish a statement metric. Test and documentation files are excluded from the percentages. See the [full test, coverage, and CI explanation](https://riaevangelist.github.io/strong-type/testing.html).
+Test and documentation files are excluded from the percentages. See the [full test, coverage, and CI explanation](https://riaevangelist.github.io/strong-type/testing.html).
 
 ## Commands
 
 | Command | What it does | Third-party tooling |
 |---|---|---|
-| `npm test` | Runs core, Node adapter, and documentation checks through `vanilla-test` | `vanilla-test` 2.1.0 |
-| `npm run test:core` | Runs portable validator regression tests through `vanilla-test` | `vanilla-test` 2.1.0 |
-| `npm run test:node` | Runs Node adapter and cross-realm tests through `vanilla-test` | `vanilla-test` 2.1.0 |
-| `npm run test:docs` | Checks reference completeness and site integrity through `vanilla-test` | `vanilla-test` 2.1.0 |
+| `npm test` | Runs Unit, Functional, Integration, and Regression through one registry | `vanilla-test` 2.1.0 |
+| `npm run test:unit` | Runs atomic core and Node validator contracts | `vanilla-test` 2.1.0 |
+| `npm run test:functional` | Runs public mode, union, and adapter workflows | `vanilla-test` 2.1.0 |
+| `npm run test:integration` | Runs documentation, package, site, and tooling boundaries | `vanilla-test` 2.1.0 |
+| `npm run test:regression` | Runs corrected edge cases and hostile-value protections | `vanilla-test` 2.1.0 |
 | `npm run test:legacy` | Runs the same registered cases through the compatibility adapter | None |
-| `npm run coverage` | Runs the `vanilla-test` suites under native V8 coverage and enforces the 95/90/95 release floors | `vanilla-test` 2.1.0 |
+| `npm run coverage` | Runs the canonical registry through VanillaTest's native Node V8 coverage collector | `vanilla-test` 2.1.0 |
 | `npm start` | Serves the docs and playground at `http://localhost:8000/` | None |
 | `npm run nodeExample` | Runs the Node example | None |
 

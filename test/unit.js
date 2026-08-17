@@ -1,9 +1,16 @@
 import Is from '../index.js';
-import {assert,equal,run,skip,test,throws} from './harness.js';
+import IsNode from '../node.js';
+import * as stream from 'node:stream';
+import * as events from 'node:events';
+import * as crypto from 'node:crypto';
+import * as util from 'node:util';
+import * as vm from 'node:vm';
+import {after,equal,skip,suite,test,throws} from './harness.js';
+
+suite('Unit');
 
 const is=new Is;
 const weakIs=new Is(false);
-const cleanup=[];
 
 const verify=function(name,value,...invalidValues){
     const invalid=invalidValues.length ? invalidValues[0] : {};
@@ -14,11 +21,9 @@ const verify=function(name,value,...invalidValues){
 
 const guarded=function(name,constructor,create,invalid={}){
     if(typeof constructor !== 'function'){
-        skip(name,'not available in this runtime');
-        test(`${name} is safely guarded`,()=>{
-            equal(weakIs[name](invalid),false);
-            throws(()=>is[name](invalid),TypeError);
-        });
+        skip(`${name} accepts its type`,'not available in this runtime');
+        test(`${name} returns false when unavailable`,()=>equal(weakIs[name](invalid),false));
+        test(`${name} throws TypeError when unavailable`,()=>throws(()=>is[name](invalid),TypeError));
         return;
     }
 
@@ -26,7 +31,9 @@ const guarded=function(name,constructor,create,invalid={}){
     try{
         value=create(constructor);
     }catch(err){
-        skip(name,`not safely constructible: ${err.message}`);
+        skip(`${name} accepts its type`,`not safely constructible: ${err.message}`);
+        test(`${name} returns false when construction is unavailable`,()=>equal(weakIs[name](invalid),false));
+        test(`${name} throws TypeError when construction is unavailable`,()=>throws(()=>is[name](invalid),TypeError));
         return;
     }
     verify(name,value,invalid);
@@ -248,14 +255,14 @@ if(typeof AbortController === 'function'){
 
 if(typeof BroadcastChannel === 'function'){
     const channel=new BroadcastChannel('strong-type-test');
-    cleanup.push(()=>channel.close());
+    after(()=>channel.close());
     verify('broadcastChannel',channel,{});
 }
 
 if(typeof MessageChannel === 'function'){
     const channel=new MessageChannel;
-    cleanup.push(()=>channel.port1.close());
-    cleanup.push(()=>channel.port2.close());
+    after(()=>channel.port1.close());
+    after(()=>channel.port2.close());
     verify('messageChannel',channel,{});
     verify('messagePort',channel.port1,{});
 }
@@ -358,61 +365,57 @@ if(wasm){
     verify('webAssemblyRuntimeError',new wasm.RuntimeError,{});
 }
 
-test('strict constructor is the default',()=>equal(new Is().strict,true));
-test('non-strict constructor is explicit',()=>equal(new Is(false).strict,false));
-test('compare is strict and does not coerce',()=>{
-    equal(weakIs.compare(1,'1'),false);
-    equal(weakIs.compare(null,undefined),false);
-});
-test('finite does not coerce or throw for BigInt',()=>{
-    equal(weakIs.finite('1'),false);
-    equal(weakIs.finite(null),false);
-    equal(weakIs.finite(1n),false);
-});
-test('brand checks reject Symbol.toStringTag spoofing',()=>{
-    const spoof={[Symbol.toStringTag]:'Uint8Array'};
-    equal(weakIs.uint8Array(spoof),false);
-    equal(weakIs.date({[Symbol.toStringTag]:'Date'}),false);
-    equal(weakIs.map({[Symbol.toStringTag]:'Map'}),false);
-});
-test('non-strict checks return false for revoked proxies',()=>{
-    const pair=Proxy.revocable({},{});
-    pair.revoke();
-    equal(weakIs.array(pair.proxy),false);
-    equal(weakIs.date(pair.proxy),false);
-    equal(weakIs.promise(pair.proxy),false);
-    equal(weakIs.nullPrototypeObject(pair.proxy),false);
-    equal(weakIs.arrayBufferView(pair.proxy),false);
-});
-test('union trims names and invokes a matching validator',()=>{
-    equal(is.union('type',' string | number '),true);
-    equal(is.union(1,['string','number']),true);
-});
-test('union returns false or throws when no type matches',()=>{
-    equal(weakIs.union({},'string|number'),false);
-    throws(()=>is.union({},'string|number'),TypeError);
-});
-test('union rejects inherited Object methods',()=>{
-    equal(weakIs.union({},'toString'),false);
-    throws(()=>is.union({},'toString'),TypeError);
-});
-test('union supports custom validators and calls the winner once',()=>{
-    let calls=0;
-    class CustomIs extends Is{
-        custom(value){
-            calls++;
-            return this.check(value,value === 'custom','custom');
-        }
-    }
-    equal(new CustomIs().union('custom','number|custom'),true);
-    equal(calls,1);
-});
+const nodeIs=new IsNode;
+const weakNodeIs=new IsNode(false);
 
-run().catch(err=>{
-    console.error(err);
-    process.exitCode=1;
-}).then(()=>{
-    for(const close of cleanup){
-        close();
+const verifyNode=function(name,value,...invalidValues){
+    const invalid=invalidValues.length ? invalidValues[0] : {};
+    test(`${name} accepts its Node type`,()=>equal(nodeIs[name](value),true));
+    test(`${name} returns false for a near miss`,()=>equal(weakNodeIs[name](invalid),false));
+    test(`${name} throws TypeError for a near miss`,()=>throws(()=>nodeIs[name](invalid),TypeError));
+};
+
+verifyNode('buffer',Buffer.from('strong-type'),new Uint8Array);
+verifyNode('nodeStream',new stream.PassThrough,{});
+verifyNode('nodeReadable',new stream.Readable({read(){this.push(null);}}),{});
+verifyNode('nodeWritable',new stream.Writable({write(chunk,encoding,done){done();}}),{});
+verifyNode('nodeDuplex',new stream.Duplex({read(){this.push(null);},write(chunk,encoding,done){done();}}),{});
+verifyNode('nodeTransform',new stream.Transform({transform(chunk,encoding,done){done(null,chunk);}}),{});
+verifyNode('nodePassThrough',new stream.PassThrough,{});
+verifyNode('eventEmitter',new events.EventEmitter,{});
+
+const timeout=setTimeout(()=>{},1000);
+clearTimeout(timeout);
+verifyNode('timeout',timeout,{});
+
+if(typeof setImmediate === 'function'){
+    const immediate=setImmediate(()=>{});
+    clearImmediate(immediate);
+    verifyNode('immediate',immediate,{});
+}else{
+    skip('immediate accepts its Node type','setImmediate is not available');
+}
+
+if(typeof crypto.createSecretKey === 'function'){
+    verifyNode('keyObject',crypto.createSecretKey(Buffer.alloc(32)),{});
+}else{
+    skip('keyObject accepts its Node type','KeyObject is not available');
+}
+
+test('x509Certificate returns false without a fixture',()=>equal(weakNodeIs.x509Certificate({}),false));
+test('x509Certificate throws TypeError without a fixture',()=>throws(()=>nodeIs.x509Certificate({}),TypeError));
+verifyNode('proxy',new Proxy({},{}),{});
+verifyNode('nativeError',vm.runInNewContext('new TypeError("type")'),{});
+verifyNode('mapIterator',new Map().keys(),new Set().keys());
+verifyNode('setIterator',new Set().keys(),new Map().keys());
+test('external returns false without a fixture',()=>equal(weakNodeIs.external({}),false));
+test('external throws TypeError without a fixture',()=>throws(()=>nodeIs.external({}),TypeError));
+
+test('moduleNamespaceObject accepts an imported namespace when supported',async()=>{
+    const namespace=await import('../index.js');
+    if(typeof util.types.isModuleNamespaceObject === 'function'){
+        equal(nodeIs.moduleNamespaceObject(namespace),true);
+    }else{
+        equal(weakNodeIs.moduleNamespaceObject(namespace),false);
     }
 });

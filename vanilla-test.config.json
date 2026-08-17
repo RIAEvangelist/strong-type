@@ -1,0 +1,17 @@
+{
+  "entry": "./test/entry.js",
+  "reportsDirectory": "./coverage",
+  "thresholds": {
+    "statements": 85,
+    "branches": 65,
+    "functions": 90,
+    "lines": 90
+  },
+  "timeoutMs": 120000,
+  "node": {
+    "include": [
+      "index.js",
+      "node.js"
+    ]
+  }
+}
