@@ -361,6 +361,18 @@ Version 2 removes several coercive edge cases while retaining the original metho
 | `union(value,'toString')` | Could call an inherited method | Rejected |
 | Subclass validators in `union` | Lost by constructing base `Is` | Preserved |
 
+## Core benchmarks
+
+The dependency-free benchmark runner measures representative successful and rejecting core validator paths with rotating fixtures, calibrated samples, result verification, dedicated per-case loops, median timings, and median absolute deviation.
+
+```sh
+npm run benchmark
+npm run benchmark:baseline
+npm run benchmark:historical
+```
+
+The default command measures the current checkout. `benchmark:baseline` compares it with the pre-optimization `700059a` implementation, while `benchmark:historical` provides a same-realm throughput reference against 1.1.0. Both comparison commands require a Git checkout containing the referenced commits. Absolute timings are harness-specific JIT throughput references, and historical results are informational because 1.1.0 did not provide the current cross-realm and spoof-resistance guarantees.
+
 ## Tests and coverage
 
 One canonical registry runs through `vanilla-test` 2.1.0 on Node 22.12 or newer, with every expectation assigned once to Unit, Functional, Integration, or Regression. CI exercises both the minimum VanillaTest runtime and Node 24. Older supported Node releases run that same registry through the small dependency-free compatibility adapter, so the development runner does not change the package's runtime support or add production dependencies.
@@ -379,16 +391,16 @@ Coverage uses VanillaTest's native Node V8 collector and includes only the two s
 
 | Source | Executable ranges | Block ranges | Function ranges | Executable lines |
 |---|---:|---:|---:|---:|
-| `index.js` | 91.05% · 285/313 | 67.07% · 55/82 | 99.56% · 230/231 | 91.60% · 829/905 |
+| `index.js` | 89.31% · 301/337 | 68.46% · 76/111 | 99.55% · 225/226 | 90.28% · 920/1019 |
 | `node.js` | 88.23% · 30/34 | 80.00% · 8/10 | 91.66% · 22/24 | 91.91% · 91/99 |
-| **Total** | **90.77% · 315/347** | **68.47% · 63/92** | **98.82% · 252/255** | **91.63% · 920/1004** |
+| **Total** | **89.21% · 331/371** | **69.42% · 84/121** | **98.80% · 247/250** | **90.42% · 1011/1118** |
 
 | Per-file gate | Lowest current file | Required |
 |---|---:|---:|
 | Executable ranges | 88.23% | 85% |
-| Block ranges | 67.07% | 65% |
+| Block ranges | 68.46% | 65% |
 | Function ranges | 91.66% | 90% |
-| Executable lines | 91.60% | 90% |
+| Executable lines | 90.28% | 90% |
 
 Test and documentation files are excluded from the percentages. See the [full test, coverage, and CI explanation](https://riaevangelist.github.io/strong-type/testing.html).
 
@@ -396,6 +408,9 @@ Test and documentation files are excluded from the percentages. See the [full te
 
 | Command | What it does | Third-party tooling |
 |---|---|---|
+| `npm run benchmark` | Measures current core validator throughput with verified results and dispersion | None |
+| `npm run benchmark:baseline` | Compares current core throughput with pre-optimization commit `700059a` | Git |
+| `npm run benchmark:historical` | Compares overlapping same-realm paths with 1.1.0 commit `3229b47` | Git |
 | `npm test` | Runs Unit, Functional, Integration, and Regression through one registry | `vanilla-test` 2.1.0 |
 | `npm run test:unit` | Runs atomic core and Node validator contracts | `vanilla-test` 2.1.0 |
 | `npm run test:functional` | Runs public mode, union, and adapter workflows | `vanilla-test` 2.1.0 |

@@ -13,7 +13,12 @@ test('strict mode is enabled by default',()=>equal(new Is().strict,true));
 test('non-strict mode is selected explicitly',()=>equal(new Is(false).strict,false));
 
 test('union trims pipe-delimited validator names',()=>equal(is.union('type',' string | number '),true));
-test('union accepts an array of validator names',()=>equal(is.union(1,['string','number']),true));
+test('union accepts an array of validator names',()=>{
+    equal(is.union(1,['string','number']),true);
+    const names=['string'];
+    names[Symbol.iterator]=function*(){yield 'number';};
+    equal(is.union('type',names),true);
+});
 test('union returns false when no validator matches in non-strict mode',()=>equal(weakIs.union({},'string|number'),false));
 test('union throws TypeError when no validator matches in strict mode',()=>throws(()=>is.union({},'string|number'),TypeError));
 test('union rejects inherited Object methods in non-strict mode',()=>equal(weakIs.union({},'toString'),false));

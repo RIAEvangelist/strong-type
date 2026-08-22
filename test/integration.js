@@ -96,7 +96,7 @@ for(const pageName of pageNames.slice(1)){
 test('README uses the local project header',()=>equal(readme.startsWith('![strong-type JavaScript values passing through a native type-validation gate](./assets/strong-type-header.png)'),true));
 test('README contains the tests and coverage section',()=>equal(readme.includes('## Tests and coverage'),true));
 test('README includes a native module script example',()=>equal(readme.includes('<script type="module">'),true));
-test('README publishes the current executable-line coverage snapshot',()=>equal(readme.includes('91.63%'),true));
+test('README publishes the current executable-line coverage snapshot',()=>equal(readme.includes('90.42%'),true));
 test('README does not load a GitHub profile avatar',()=>equal(/avatars\d*\.githubusercontent\.com/i.test(readme),false));
 test('README does not reference a profile image file',()=>equal(/RIAEvangelist\.png/i.test(readme),false));
 

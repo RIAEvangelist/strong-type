@@ -7,44 +7,70 @@ class FakeCore{
 }
 
 const brandProbe={};
+const brandFailure=Symbol('strong-type brand failure');
+const noArguments=Object.freeze([]);
+const brandProbeArguments=Object.freeze([brandProbe]);
+const emptyStringArguments=Object.freeze(['']);
+const segmentProbeArguments=Object.freeze([-1]);
+const functionToString=Function.prototype.toString;
+const objectConstructorSource=functionToString.call(Object);
+const objectGetPrototypeOf=Object.getPrototypeOf;
+const reflectApply=Reflect.apply;
 
-const tryBrand=function(check){
+const getterFor=function(prototype,property){
+    if(!prototype){
+        return false;
+    }
+
     try{
-        check();
+        const descriptor=Object.getOwnPropertyDescriptor(prototype,property);
+        return descriptor && typeof descriptor.get === 'function' ? descriptor.get : false;
+    }catch(err){
+        return false;
+    }
+};
+
+const applyBrand=function(value,check,args=noArguments){
+    if(typeof check !== 'function'){
+        return false;
+    }
+
+    try{
+        reflectApply(check,value,args);
         return true;
     }catch(err){
         return false;
     }
 };
 
-const methodBrand=function(value,prototype,method,args=[]){
-    if(!prototype || typeof prototype[method] !== 'function'){
-        return false;
+const applyValue=function(value,check,args=noArguments){
+    if(typeof check !== 'function'){
+        return brandFailure;
     }
 
-    return tryBrand(()=>Reflect.apply(prototype[method],value,args));
+    try{
+        return reflectApply(check,value,args);
+    }catch(err){
+        return brandFailure;
+    }
 };
 
-const getterBrand=function(value,prototype,property){
+const methodBrand=function(value,prototype,method,args=noArguments){
     if(!prototype){
         return false;
     }
 
-    const descriptor=Object.getOwnPropertyDescriptor(prototype,property);
-    if(!descriptor || typeof descriptor.get !== 'function'){
+    let check;
+    try{
+        check=prototype[method];
+    }catch(err){
         return false;
     }
-
-    return tryBrand(()=>Reflect.apply(descriptor.get,value,[]));
+    return applyBrand(value,check,args);
 };
 
-const getterValue=function(value,prototype,property){
-    const descriptor=prototype && Object.getOwnPropertyDescriptor(prototype,property);
-    if(!descriptor || typeof descriptor.get !== 'function'){
-        return undefined;
-    }
-
-    return Reflect.apply(descriptor.get,value,[]);
+const getterBrand=function(value,prototype,property){
+    return applyBrand(value,getterFor(prototype,property));
 };
 
 const instanceOf=function(value,constructor){
@@ -67,17 +93,36 @@ const stringTagCheck=function(value,type){
     }
 };
 
+const arrayBufferByteLengthGetter=getterFor(globalThis.ArrayBuffer && globalThis.ArrayBuffer.prototype,'byteLength');
+const arrayBufferResizableGetter=getterFor(globalThis.ArrayBuffer && globalThis.ArrayBuffer.prototype,'resizable');
+const sharedArrayBufferByteLengthGetter=getterFor(globalThis.SharedArrayBuffer && globalThis.SharedArrayBuffer.prototype,'byteLength');
+const sharedArrayBufferGrowableGetter=getterFor(globalThis.SharedArrayBuffer && globalThis.SharedArrayBuffer.prototype,'growable');
+const dataViewByteLengthGetter=getterFor(globalThis.DataView && globalThis.DataView.prototype,'byteLength');
+const regExpSourceGetter=getterFor(globalThis.RegExp && globalThis.RegExp.prototype,'source');
+const intlDateTimeFormatGetter=getterFor(globalThis.Intl && globalThis.Intl.DateTimeFormat && globalThis.Intl.DateTimeFormat.prototype,'format');
+const intlCollatorCompareGetter=getterFor(globalThis.Intl && globalThis.Intl.Collator && globalThis.Intl.Collator.prototype,'compare');
+const intlNumberFormatGetter=getterFor(globalThis.Intl && globalThis.Intl.NumberFormat && globalThis.Intl.NumberFormat.prototype,'format');
+const dateGetTime=Date.prototype.getTime;
+const mapHas=Map.prototype.has;
+const weakMapHas=WeakMap.prototype.has;
+const setHas=Set.prototype.has;
+const weakSetHas=WeakSet.prototype.has;
+const booleanValueOf=Boolean.prototype.valueOf;
+const numberValueOf=Number.prototype.valueOf;
+const bigIntValueOf=globalThis.BigInt && globalThis.BigInt.prototype.valueOf;
+const stringValueOf=String.prototype.valueOf;
+const symbolValueOf=globalThis.Symbol && globalThis.Symbol.prototype.valueOf;
+
 const arrayBufferCheck=function(value){
-    return getterBrand(value,globalThis.ArrayBuffer && globalThis.ArrayBuffer.prototype,'byteLength');
+    return applyBrand(value,arrayBufferByteLengthGetter);
 };
 
 const sharedArrayBufferCheck=function(value){
-    const constructor=globalThis.SharedArrayBuffer;
-    return getterBrand(value,constructor && constructor.prototype,'byteLength');
+    return applyBrand(value,sharedArrayBufferByteLengthGetter);
 };
 
 const dataViewCheck=function(value){
-    return getterBrand(value,globalThis.DataView && globalThis.DataView.prototype,'byteLength');
+    return applyBrand(value,dataViewByteLengthGetter);
 };
 
 const arrayBufferViewCheck=function(value){
@@ -95,69 +140,61 @@ const typedArrayTagGetter=(function(){
 })();
 
 const typedArrayName=function(value){
-    if(!arrayBufferViewCheck(value) || dataViewCheck(value) || typeof typedArrayTagGetter !== 'function'){
+    if(!arrayBufferViewCheck(value) || typeof typedArrayTagGetter !== 'function'){
         return false;
     }
 
-    try{
-        return Reflect.apply(typedArrayTagGetter,value,[]);
-    }catch(err){
-        return false;
-    }
+    const name=applyValue(value,typedArrayTagGetter);
+    return name === brandFailure ? false : name;
 };
 
 const dateCheck=function(value){
-    return methodBrand(value,Date.prototype,'getTime');
+    return applyBrand(value,dateGetTime);
 };
 
 const validDateCheck=function(value){
-    if(!dateCheck(value)){
-        return false;
-    }
-
-    return !Number.isNaN(Reflect.apply(Date.prototype.getTime,value,[]));
+    const time=applyValue(value,dateGetTime);
+    return time !== brandFailure && !Number.isNaN(time);
 };
 
 const mapCheck=function(value){
-    return methodBrand(value,Map.prototype,'has',[brandProbe]);
+    return applyBrand(value,mapHas,brandProbeArguments);
 };
 
 const weakMapCheck=function(value){
-    return methodBrand(value,WeakMap.prototype,'has',[brandProbe]);
+    return applyBrand(value,weakMapHas,brandProbeArguments);
 };
 
 const setCheck=function(value){
-    return methodBrand(value,Set.prototype,'has',[brandProbe]);
+    return applyBrand(value,setHas,brandProbeArguments);
 };
 
 const weakSetCheck=function(value){
-    return methodBrand(value,WeakSet.prototype,'has',[brandProbe]);
+    return applyBrand(value,weakSetHas,brandProbeArguments);
 };
 
 const regExpCheck=function(value){
-    return getterBrand(value,RegExp.prototype,'source');
+    return applyBrand(value,regExpSourceGetter);
 };
 
 const boxedBooleanCheck=function(value){
-    return typeof value === 'object' && value !== null && methodBrand(value,Boolean.prototype,'valueOf');
+    return typeof value === 'object' && value !== null && applyBrand(value,booleanValueOf);
 };
 
 const boxedNumberCheck=function(value){
-    return typeof value === 'object' && value !== null && methodBrand(value,Number.prototype,'valueOf');
+    return typeof value === 'object' && value !== null && applyBrand(value,numberValueOf);
 };
 
 const boxedBigIntCheck=function(value){
-    const prototype=globalThis.BigInt && globalThis.BigInt.prototype;
-    return typeof value === 'object' && value !== null && methodBrand(value,prototype,'valueOf');
+    return typeof value === 'object' && value !== null && applyBrand(value,bigIntValueOf);
 };
 
 const boxedStringCheck=function(value){
-    return typeof value === 'object' && value !== null && methodBrand(value,String.prototype,'valueOf');
+    return typeof value === 'object' && value !== null && applyBrand(value,stringValueOf);
 };
 
 const boxedSymbolCheck=function(value){
-    const prototype=globalThis.Symbol && globalThis.Symbol.prototype;
-    return typeof value === 'object' && value !== null && methodBrand(value,prototype,'valueOf');
+    return typeof value === 'object' && value !== null && applyBrand(value,symbolValueOf);
 };
 
 const plainObjectCheck=function(value){
@@ -180,7 +217,7 @@ const plainObjectCheck=function(value){
     }
 
     const constructor=prototype.constructor;
-    return typeof constructor === 'function' && Function.prototype.toString.call(constructor) === Function.prototype.toString.call(Object);
+    return typeof constructor === 'function' && functionToString.call(constructor) === objectConstructorSource;
 };
 
 const protocolCheck=function(value,symbol,method){
@@ -215,6 +252,82 @@ const blockedUnionMethods=new Set([
     'union'
 ]);
 
+const unionNamesCache=new Map;
+const unionNamesCacheLimit=128;
+
+const normalizeUnionNames=function(types){
+    if(typeof types === 'string' && unionNamesCache.has(types)){
+        return unionNamesCache.get(types);
+    }
+
+    const source=Array.isArray(types) ? types : typeof types === 'string' ? types.split('|') : [];
+    const names=[];
+    const length=source.length;
+    for(let index=0;index<length;index++){
+        const type=source[index];
+        if(typeof type !== 'string'){
+            continue;
+        }
+        const name=type.trim();
+        if(name){
+            names.push(name);
+        }
+    }
+
+    if(typeof types === 'string'){
+        if(unionNamesCache.size >= unionNamesCacheLimit){
+            unionNamesCache.delete(unionNamesCache.keys().next().value);
+        }
+        Object.freeze(names);
+        unionNamesCache.set(types,names);
+    }
+    return names;
+};
+
+let cachedSegmenterConstructor;
+let cachedSegmentMethod;
+let cachedSegmentsPrototype;
+let cachedSegmentsContaining;
+const segmentsContainingFor=function(constructor){
+    if(typeof constructor !== 'function'){
+        return false;
+    }
+
+    let segment;
+    try{
+        segment=constructor.prototype && constructor.prototype.segment;
+    }catch(err){
+        return false;
+    }
+    if(typeof segment !== 'function'){
+        return false;
+    }
+    if(constructor === cachedSegmenterConstructor && segment === cachedSegmentMethod && typeof cachedSegmentsContaining === 'function'){
+        try{
+            if(cachedSegmentsPrototype && cachedSegmentsPrototype.containing === cachedSegmentsContaining){
+                return cachedSegmentsContaining;
+            }
+        }catch(err){
+            return false;
+        }
+    }
+
+    try{
+        const prototype=objectGetPrototypeOf(reflectApply(segment,new constructor,emptyStringArguments));
+        const containing=prototype && prototype.containing;
+        if(typeof containing === 'function'){
+            cachedSegmenterConstructor=constructor;
+            cachedSegmentMethod=segment;
+            cachedSegmentsPrototype=prototype;
+            cachedSegmentsContaining=containing;
+            return containing;
+        }
+    }catch(err){
+        return false;
+    }
+    return false;
+};
+
 const validatorFor=function(target,name){
     if(blockedUnionMethods.has(name)){
         return false;
@@ -239,11 +352,12 @@ class Is{
 
     //core
     throw(valueType,expectedType){
-        const err=new TypeError;
-        err.message=`expected type of ${valueType} to be ${expectedType}`;
         if(!this.strict){
             return false;
         }
+
+        const err=new TypeError;
+        err.message=`expected type of ${valueType} to be ${expectedType}`;
         throw err;
     }
 
@@ -268,8 +382,13 @@ class Is{
         return this.check(value,stringTagCheck(value,type),`[object ${type}]`);
     }
 
-    compare(value,targetValue,typeName=String(targetValue)){
-        return this.check(value,Object.is(value,targetValue),typeName);
+    compare(value,targetValue,typeName){
+        if(Object.is(value,targetValue)){
+            return this.check(value,true,typeName);
+        }
+
+        const expectedType=typeName === undefined ? String(targetValue) : typeName;
+        return this.check(value,false,expectedType);
     }
 
     globalInstanceCheck(value,type){
@@ -304,16 +423,18 @@ class Is{
     }
 
     union(value,typesString){
-        const types=Array.isArray(typesString) ? typesString : typeof typesString === 'string' ? typesString.split('|') : [];
-        const names=types.map(type=>typeof type === 'string' ? type.trim() : '').filter(Boolean);
+        const names=normalizeUnionNames(typesString);
         if(!names.length){
             return this.throw(typeof typesString,'a pipe-delimited string or array of strong-type methods');
         }
 
-        const validators=names.map(name=>validatorFor(this,name));
-        if(validators.some(validator=>!validator)){
-            const invalid=names[validators.findIndex(validator=>!validator)];
-            return this.throw(invalid,'a method available on strong-type');
+        const validators=new Array(names.length);
+        for(let index=0;index<names.length;index++){
+            const validator=validatorFor(this,names[index]);
+            if(!validator){
+                return this.throw(names[index],'a method available on strong-type');
+            }
+            validators[index]=validator;
         }
 
         const weakIs=Object.create(this);
@@ -328,7 +449,11 @@ class Is{
             }
         }
 
-        return this.throw(typeof value,names.join('|'));
+        const fail=this.throw;
+        if(fail === defaultThrow && !this.strict){
+            return false;
+        }
+        return reflectApply(fail,this,[typeof value,names.join('|')]);
     }
 
     //values and primitives
@@ -450,11 +575,13 @@ class Is{
 
     //objects and collections
     array(value){
-        return this.check(value,tryBrand(()=>{
-            if(!Array.isArray(value)){
-                throw new TypeError;
-            }
-        }),'Array');
+        let pass=false;
+        try{
+            pass=Array.isArray(value);
+        }catch(err){
+            pass=false;
+        }
+        return this.check(value,pass,'Array');
     }
 
     date(value){
@@ -486,11 +613,14 @@ class Is{
     }
 
     nullPrototypeObject(value){
-        const pass=value !== null && typeof value === 'object' && tryBrand(()=>{
-            if(Object.getPrototypeOf(value) !== null){
-                throw new TypeError;
+        let pass=false;
+        if(value !== null && typeof value === 'object'){
+            try{
+                pass=Object.getPrototypeOf(value) === null;
+            }catch(err){
+                pass=false;
             }
-        });
+        }
         return this.check(value,pass,'null-prototype object');
     }
 
@@ -713,15 +843,12 @@ class Is{
     }
 
     resizableArrayBuffer(value){
-        const prototype=globalThis.ArrayBuffer && globalThis.ArrayBuffer.prototype;
-        const pass=arrayBufferCheck(value) && getterBrand(value,prototype,'resizable') && getterValue(value,prototype,'resizable') === true;
+        const pass=applyValue(value,arrayBufferResizableGetter) === true;
         return this.check(value,pass,'resizable ArrayBuffer');
     }
 
     growableSharedArrayBuffer(value){
-        const constructor=globalThis.SharedArrayBuffer;
-        const prototype=constructor && constructor.prototype;
-        const pass=sharedArrayBufferCheck(value) && getterBrand(value,prototype,'growable') && getterValue(value,prototype,'growable') === true;
+        const pass=applyValue(value,sharedArrayBufferGrowableGetter) === true;
         return this.check(value,pass,'growable SharedArrayBuffer');
     }
 
@@ -733,7 +860,7 @@ class Is{
         const prototype=globalThis.ArrayBuffer.prototype;
         const descriptor=Object.getOwnPropertyDescriptor(prototype,'detached');
         if(descriptor && typeof descriptor.get === 'function'){
-            return this.check(value,Reflect.apply(descriptor.get,value,[]) === true,'detached ArrayBuffer');
+            return this.check(value,reflectApply(descriptor.get,value,noArguments) === true,'detached ArrayBuffer');
         }
 
         let detached=false;
@@ -748,13 +875,13 @@ class Is{
     //Intl
     intlDateTimeFormat(value){
         const constructor=globalThis.Intl && globalThis.Intl.DateTimeFormat;
-        const pass=constructor && methodBrand(value,constructor.prototype,'resolvedOptions');
+        const pass=constructor && applyBrand(value,intlDateTimeFormatGetter);
         return this.check(value,pass,'Intl.DateTimeFormat');
     }
 
     intlCollator(value){
         const constructor=globalThis.Intl && globalThis.Intl.Collator;
-        const pass=constructor && methodBrand(value,constructor.prototype,'resolvedOptions');
+        const pass=constructor && applyBrand(value,intlCollatorCompareGetter);
         return this.check(value,pass,'Intl.Collator');
     }
 
@@ -778,7 +905,7 @@ class Is{
 
     intlNumberFormat(value){
         const constructor=globalThis.Intl && globalThis.Intl.NumberFormat;
-        const pass=constructor && methodBrand(value,constructor.prototype,'resolvedOptions');
+        const pass=constructor && applyBrand(value,intlNumberFormatGetter);
         return this.check(value,pass,'Intl.NumberFormat');
     }
 
@@ -802,11 +929,7 @@ class Is{
 
     intlSegments(value){
         const constructor=globalThis.Intl && globalThis.Intl.Segmenter;
-        let pass=false;
-        if(constructor){
-            const prototype=Object.getPrototypeOf(new constructor().segment(''));
-            pass=methodBrand(value,prototype,'containing',[0]);
-        }
+        const pass=applyBrand(value,segmentsContainingFor(constructor),segmentProbeArguments);
         return this.check(value,pass,'Intl Segments');
     }
 
@@ -819,7 +942,7 @@ class Is{
     //garbage collection and resource management
     finalizationRegistry(value){
         const constructor=globalThis.FinalizationRegistry;
-        const pass=constructor && methodBrand(value,constructor.prototype,'unregister',[brandProbe]);
+        const pass=constructor && methodBrand(value,constructor.prototype,'unregister',brandProbeArguments);
         return this.check(value,pass,'FinalizationRegistry');
     }
 
@@ -1147,5 +1270,7 @@ class Is{
         return this.nestedInstanceCheck(value,globalThis.WebAssembly,'RuntimeError');
     }
 }
+
+const defaultThrow=Is.prototype.throw;
 
 export {Is as default,Is};
