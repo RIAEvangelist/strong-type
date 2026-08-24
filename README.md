@@ -375,15 +375,16 @@ The default command measures the current checkout. `benchmark:baseline` compares
 
 ## Tests and coverage
 
-One canonical registry runs through `vanilla-test` 2.1.0 on Node 22.12 or newer, with every expectation assigned once to Unit, Functional, Integration, or Regression. CI exercises both the minimum VanillaTest runtime and Node 24. Older supported Node releases run that same registry through the small dependency-free compatibility adapter, so the development runner does not change the package's runtime support or add production dependencies.
+One canonical registry runs through `vanilla-test` 2.1.0 on Node 22.12 or newer, with every expectation assigned once to Unit, Functional, Behavioral, Integration, or Regression. CI exercises both the minimum VanillaTest runtime and Node 24. Older supported Node releases run that same registry through the small dependency-free compatibility adapter, so the development runner does not change the package's runtime support or add production dependencies.
 
 | Test suite | Result on Node 24.18.0 | Covers |
 |---|---:|---|
 | Unit | 586 passed · 13 guarded skips | Atomic validator contracts across all 201 core and Node validators, including guarded capabilities |
 | Functional | 15 passed | Strict and non-strict modes, unions, custom validators, and Node adapter inheritance |
-| Integration | 554 passed | Reference and README completeness, site links, package exports, coverage configuration, and CI wiring |
+| Behavioral | 8 passed | Consumer order boundaries, untrusted JSON filtering, identifier routing, domain extensions, Node uploads, and thenable safety |
+| Integration | 560 passed | Reference and README completeness, site links, package exports, coverage configuration, and CI wiring |
 | Regression | 23 passed | Coercion fixes, cross-realm brands, spoof resistance, revoked proxies, and cleanup resilience |
-| **Total** | **1,178 passed · 0 failed · 13 skipped** | Four exclusive suites from one non-duplicative registry |
+| **Total** | **1,192 passed · 0 failed · 13 skipped** | Five exclusive suites from one non-duplicative registry |
 
 A guarded skip means the runtime does not expose that host API. It is a capability result, not an ignored failure.
 
@@ -391,16 +392,16 @@ Coverage uses VanillaTest's native Node V8 collector and includes only the two s
 
 | Source | Executable ranges | Block ranges | Function ranges | Executable lines |
 |---|---:|---:|---:|---:|
-| `index.js` | 89.31% · 301/337 | 68.46% · 76/111 | 99.55% · 225/226 | 90.28% · 920/1019 |
+| `index.js` | 90.00% · 306/340 | 71.05% · 81/114 | 99.55% · 225/226 | 90.87% · 926/1019 |
 | `node.js` | 88.23% · 30/34 | 80.00% · 8/10 | 91.66% · 22/24 | 91.91% · 91/99 |
-| **Total** | **89.21% · 331/371** | **69.42% · 84/121** | **98.80% · 247/250** | **90.42% · 1011/1118** |
+| **Total** | **89.83% · 336/374** | **71.77% · 89/124** | **98.80% · 247/250** | **90.96% · 1017/1118** |
 
 | Per-file gate | Lowest current file | Required |
 |---|---:|---:|
 | Executable ranges | 88.23% | 85% |
-| Block ranges | 68.46% | 65% |
+| Block ranges | 71.05% | 65% |
 | Function ranges | 91.66% | 90% |
-| Executable lines | 90.28% | 90% |
+| Executable lines | 90.87% | 90% |
 
 Test and documentation files are excluded from the percentages. See the [full test, coverage, and CI explanation](https://riaevangelist.github.io/strong-type/testing.html).
 
@@ -411,9 +412,10 @@ Test and documentation files are excluded from the percentages. See the [full te
 | `npm run benchmark` | Measures current core validator throughput with verified results and dispersion | None |
 | `npm run benchmark:baseline` | Compares current core throughput with pre-optimization commit `700059a` | Git |
 | `npm run benchmark:historical` | Compares overlapping same-realm paths with 1.1.0 commit `3229b47` | Git |
-| `npm test` | Runs Unit, Functional, Integration, and Regression through one registry | `vanilla-test` 2.1.0 |
+| `npm test` | Runs Unit, Functional, Behavioral, Integration, and Regression through one registry | `vanilla-test` 2.1.0 |
 | `npm run test:unit` | Runs atomic core and Node validator contracts | `vanilla-test` 2.1.0 |
 | `npm run test:functional` | Runs public mode, union, and adapter workflows | `vanilla-test` 2.1.0 |
+| `npm run test:behavioral` | Runs observable consumer workflows and side-effect boundaries | `vanilla-test` 2.1.0 |
 | `npm run test:integration` | Runs documentation, package, site, and tooling boundaries | `vanilla-test` 2.1.0 |
 | `npm run test:regression` | Runs corrected edge cases and hostile-value protections | `vanilla-test` 2.1.0 |
 | `npm run test:legacy` | Runs the same registered cases through the compatibility adapter | None |

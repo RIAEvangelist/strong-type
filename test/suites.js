@@ -1,6 +1,7 @@
 const suites=Object.freeze({
     unit:Object.freeze({label:'Unit',module:'./unit.js'}),
     functional:Object.freeze({label:'Functional',module:'./functional.js'}),
+    behavioral:Object.freeze({label:'Behavioral',module:'./behavioral.js'}),
     integration:Object.freeze({label:'Integration',module:'./integration.js'}),
     regression:Object.freeze({label:'Regression',module:'./regression.js'})
 });
