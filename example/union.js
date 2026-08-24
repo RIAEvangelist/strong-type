@@ -1,4 +1,4 @@
-import Is from '../index.js';
+import Is from 'strong-type';
 
 const is=new Is();
 

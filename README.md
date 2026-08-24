@@ -288,7 +288,9 @@ The adapter imports Node built-ins only. It never enters the default browser-saf
 
 ## Direct browser use without bundling
 
-Use a native import map. Serve the files over HTTP; browsers do not load ES modules reliably from `file:` URLs.
+strong-type works with bundlers and without a bundler. Bundlers resolve the bare `strong-type` import normally. Native browser ESM resolves that same bare import through an import map, with no build or transpilation step.
+
+For the normal npm layout, place this complete import map before the module script:
 
 ```html
 <script type="importmap">
@@ -306,6 +308,8 @@ Use a native import map. Serve the files over HTTP; browsers do not load ES modu
     console.log(is.url(new URL('https://example.com')));
 </script>
 ```
+
+Import-map paths are relative to the HTML document. Serve the app over HTTP(S), and configure the server to expose the mapped `node_modules` file; `file://` is not a supported module-loading path. strong-type has zero runtime dependencies, so there are no dependency entries or nested-version `scopes` to add.
 
 You can also import the source directly in a native module script:
 
@@ -382,9 +386,9 @@ One canonical registry runs through `vanilla-test` 2.1.0 on Node 22.12 or newer,
 | Unit | 586 passed · 13 guarded skips | Atomic validator contracts across all 201 core and Node validators, including guarded capabilities |
 | Functional | 15 passed | Strict and non-strict modes, unions, custom validators, and Node adapter inheritance |
 | Behavioral | 8 passed | Consumer order boundaries, untrusted JSON filtering, identifier routing, domain extensions, Node uploads, and thenable safety |
-| Integration | 560 passed | Reference and README completeness, site links, package exports, coverage configuration, and CI wiring |
+| Integration | 636 passed | Reference and README completeness, browser-resolution contracts, site links, package exports, packed-consumer configuration, and CI wiring |
 | Regression | 23 passed | Coercion fixes, cross-realm brands, spoof resistance, revoked proxies, and cleanup resilience |
-| **Total** | **1,192 passed · 0 failed · 13 skipped** | Five exclusive suites from one non-duplicative registry |
+| **Total** | **1,268 passed · 0 failed · 13 skipped** | Five exclusive suites from one non-duplicative registry, plus the same seven shared behavioral scenarios passing in Node and Chrome |
 
 A guarded skip means the runtime does not expose that host API. It is a capability result, not an ignored failure.
 
@@ -419,10 +423,14 @@ Test and documentation files are excluded from the percentages. See the [full te
 | `npm run test:integration` | Runs documentation, package, site, and tooling boundaries | `vanilla-test` 2.1.0 |
 | `npm run test:regression` | Runs corrected edge cases and hostile-value protections | `vanilla-test` 2.1.0 |
 | `npm run test:legacy` | Runs the same registered cases through the compatibility adapter | None |
+| `npm run test:browser` | Runs the shared native-browser behavioral inventory in real Chrome | `vanilla-test` 2.1.0 |
+| `npm run test:conformance` | Runs the same bare-import inventory in Node and real Chrome | `vanilla-test` 2.1.0 |
+| `npm run test:browser-contract` | Checks browser metadata, documentation, import maps, and deployment wiring | None |
+| `npm run test:package` | Packs and installs the candidate in an isolated ESM consumer | npm |
 | `npm run coverage` | Runs the canonical registry through VanillaTest's native Node V8 coverage collector | `vanilla-test` 2.1.0 |
 | `npm start` | Serves the docs and playground at `http://localhost:8000/` | None |
 | `npm run nodeExample` | Runs the Node example | None |
 
 ## License
 
-[MIT](./licence) · Roshi _ _
+[Migration notes](./MIGRATION.md) · [Changelog](./CHANGELOG.md) · [MIT](./licence) · Roshi _ _

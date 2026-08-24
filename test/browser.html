@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>strong-type native-browser conformance</title>
+        <script type="importmap">
+            {
+                "imports": {
+                    "strong-type": "../index.js"
+                }
+            }
+        </script>
+    </head>
+    <body data-conformance="pending" data-package-import="strong-type">
+        <main>
+            <h1>Native-browser conformance</h1>
+            <p>strong-type works with bundlers and without a bundler.</p>
+            <p>Bundlers resolve the bare import normally. This native browser ESM fixture uses the explicit import map above with no build or transpilation step. Its path is relative to this document; serve it over HTTP(S), configure the server to expose the mapped file, and do not use <code>file://</code>.</p>
+            <p id="status" role="status">Running the shared behavioral inventory in native browser ESM…</p>
+            <ol id="results"></ol>
+        </main>
+        <script type="module">
+            import {runBehavioralCore} from './behavioral-core.js';
+
+            const result=await runBehavioralCore();
+            const status=document.querySelector('#status');
+            const results=document.querySelector('#results');
+            document.body.dataset.conformance=result.ok ? 'passed' : 'failed';
+            status.textContent=result.ok
+                ? `${result.total} shared Given/When/Then behaviors passed through the bare strong-type import.`
+                : `${result.failureCount} shared behavior failed.`;
+
+            for(const description of result.ok ? result.passed : result.failed){
+                const item=document.createElement('li');
+                item.textContent=description;
+                results.append(item);
+            }
+
+            globalThis.__STRONG_TYPE_NATIVE_BROWSER_RESULT__=result;
+            if(!result.ok){
+                console.error(result.report);
+            }
+        </script>
+    </body>
+</html>

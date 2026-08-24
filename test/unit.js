@@ -1,5 +1,5 @@
-import Is from '../index.js';
-import IsNode from '../node.js';
+import Is from 'strong-type';
+import IsNode from 'strong-type/node';
 import * as stream from 'node:stream';
 import * as events from 'node:events';
 import * as crypto from 'node:crypto';
@@ -412,7 +412,7 @@ test('external returns false without a fixture',()=>equal(weakNodeIs.external({}
 test('external throws TypeError without a fixture',()=>throws(()=>nodeIs.external({}),TypeError));
 
 test('moduleNamespaceObject accepts an imported namespace when supported',async()=>{
-    const namespace=await import('../index.js');
+    const namespace=await import('strong-type');
     if(typeof util.types.isModuleNamespaceObject === 'function'){
         equal(nodeIs.moduleNamespaceObject(namespace),true);
     }else{

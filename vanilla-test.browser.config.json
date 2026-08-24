@@ -1,0 +1,26 @@
+{
+  "entry": "./test/native-browser-entry.js",
+  "reportsDirectory": "./coverage/native-browser",
+  "thresholds": {
+    "statements": 0,
+    "branches": 0,
+    "functions": 0,
+    "lines": 0
+  },
+  "timeoutMs": 120000,
+  "node": {
+    "include": [
+      "index.js"
+    ]
+  },
+  "chrome": {
+    "include": [
+      "index.js"
+    ],
+    "imports": {
+      "strong-type": "./index.js"
+    },
+    "headless": true,
+    "executablePath": null
+  }
+}

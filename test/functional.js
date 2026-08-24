@@ -1,5 +1,5 @@
-import Is from '../index.js';
-import IsNode from '../node.js';
+import Is from 'strong-type';
+import IsNode from 'strong-type/node';
 import {equal,suite,test,throws} from './harness.js';
 
 suite('Functional');

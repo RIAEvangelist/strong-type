@@ -54,7 +54,23 @@ jobs:
         with:
           node-version: 24.x
       - run: npm ci
-      - run: npm pack --dry-run
+      - run: npm run test:package
+      - run: npm ls --omit=dev --all
+      - run: npm ls --all
+      - run: npm audit --omit=dev
+      - run: npm audit
+
+  native-browser:
+    name: Native browser / Node + Chrome
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+      - run: npm ci
+      - run: npm run test:browser-contract
+      - run: npm run test:conformance
 
   coverage:
     name: Native coverage

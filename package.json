@@ -1,9 +1,10 @@
 {
   "name": "strong-type",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "type": "module",
   "description": "Dependency-free native ESM type enforcement for JavaScript values, objects, classes, browsers, and Node.",
   "main": "index.js",
+  "browser": "./index.js",
   "exports": {
     ".": "./index.js",
     "./index.js": "./index.js",
@@ -16,6 +17,8 @@
     "node.js",
     "benchmark/core.js",
     "assets/strong-type-header.png",
+    "CHANGELOG.md",
+    "MIGRATION.md",
     "README.md",
     "licence"
   ],
@@ -37,10 +40,14 @@
     "test:integration": "node scripts/test.js integration",
     "test:regression": "node scripts/test.js regression",
     "test:legacy": "node scripts/test.js legacy",
+    "test:browser": "vanilla-test coverage chrome --config vanilla-test.browser.config.json",
+    "test:conformance": "vanilla-test coverage all --config vanilla-test.browser.config.json",
+    "test:browser-contract": "node scripts/check-browser-contract.js",
+    "test:package": "node scripts/package-test.js",
     "coverage": "vanilla-test coverage node",
     "start": "node scripts/serve.js",
     "nodeExample": "node ./example/node/typecheck.js",
-    "check": "npm test"
+    "check": "npm test && npm run test:browser-contract && npm run test:conformance && npm run test:package"
   },
   "repository": {
     "type": "git",

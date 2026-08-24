@@ -35,6 +35,7 @@
                     <p class="section-kicker">183 · Isomorphic core</p>
                     <h2>Browser-safe and Node-safe validators.</h2>
                     <p>Every method exists in every runtime. A guarded type that the host does not provide throws in strict mode and returns false in non-strict mode—never a missing-global ReferenceError.</p>
+                    <p>strong-type works with bundlers and without a bundler. Bundlers resolve its bare import normally; native browser ESM needs an import map before the module script and no build or transpilation step. The <a href="./#browser-use">complete npm-layout example</a> uses a document-relative path, HTTP(S), and a server that exposes the mapped file; <code>file://</code> is unsupported.</p>
                     <label class="filter-label" for="type-filter">Filter methods, accepted values, notes, or runtime</label>
                     <input id="type-filter" class="type-filter" type="search" placeholder="Try: temporal, stream, bigint, Web API…" autocomplete="off">
                     <p id="filter-status" class="filter-status" aria-live="polite"></p>
@@ -61,7 +62,7 @@ nodeIs.union(Buffer.from('type'),'buffer|string');</code></pre></div>
                 <section id="node" class="doc-section">
                     <p class="section-kicker">18 · Node adapter</p>
                     <h2>Node precision stays opt-in.</h2>
-                    <p>The adapter extends the same <code>Is</code> class. It imports only Node built-ins. The browser playground intentionally never loads it.</p>
+                    <p>The adapter extends the same <code>Is</code> class. It imports only Node built-ins. The browser playground intentionally never loads it; browser code must import the shared <code>strong-type</code> entry instead.</p>
                     <div class="code-block"><div><span>Node JavaScript</span><button type="button" data-copy-target="node-code">Copy</button></div><pre id="node-code"><code>import IsNode from 'strong-type/node';
 
 const is=new IsNode;

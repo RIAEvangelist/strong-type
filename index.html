@@ -66,7 +66,7 @@ is.string(value);    <span class="fail">// TypeError</span></code></pre>
                             <tr><td>Build step</td><td><span class="status pass">None</span></td><td>No bundler or transpiler is required.</td></tr>
                             <tr><td>Default entry</td><td><code>strong-type</code></td><td>Browser-safe and Node-safe.</td></tr>
                             <tr><td>Node entry</td><td><code>strong-type/node</code></td><td>Explicit Node built-ins and exact util checks.</td></tr>
-                            <tr><td>Tests</td><td><span class="status shared">vanilla-test 2.1.0</span></td><td>1,192 focused tests across five exclusive suites, plus guarded capability skips.</td></tr>
+                            <tr><td>Tests</td><td><span class="status shared">vanilla-test 2.1.0</span></td><td>1,268 focused tests across five exclusive suites, plus seven shared behaviors in Node and real Chrome.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -118,6 +118,7 @@ is.number('42');                 // throws TypeError</code></pre></div>
             <section id="browser-use" class="section">
                 <p class="section-kicker">Direct browser import</p>
                 <h2>Use a module script. Still no bundle.</h2>
+                <p>strong-type works with bundlers and without a bundler. Bundlers resolve the bare package import normally. Native browser ESM uses an import map and executes the same checked-in module with no build or transpilation step.</p>
                 <p>Load the checked-in module directly from this project’s own Pages URL, or self-host the same file. The browser executes it as native ESM.</p>
                 <div class="code-block"><div><span>HTML · direct URL</span><button type="button" data-copy-target="browser-direct-code">Copy</button></div><pre id="browser-direct-code"><code>&lt;script type="module"&gt;
     import Is from 'https://riaevangelist.github.io/strong-type/index.js';
@@ -138,7 +139,7 @@ is.number('42');                 // throws TypeError</code></pre></div>
     import Is from 'strong-type';
     console.log(new Is(false).string('native ESM'));
 &lt;/script&gt;</code></pre></div>
-                <div class="callout">Serve modules over HTTP. No bundle, transform, runtime shim, or host switch is involved.</div>
+                <div class="callout">Import-map paths are relative to the HTML document. Serve the app over HTTP(S) and configure the server to expose the mapped <code>node_modules</code> file; <code>file://</code> is not supported. There are no runtime dependencies, so no dependency entries or nested-version scopes are needed.</div>
             </section>
 
             <section id="entry-points" class="section boundary-section">
@@ -157,9 +158,9 @@ is.number('42');                 // throws TypeError</code></pre></div>
             <section id="quality" class="section">
                 <p class="section-kicker">Tested in public</p>
                 <h2>Web-standard tests. Native coverage.</h2>
-                <p>The five-suite registry runs through <code>vanilla-test</code> 2.1.0. Its native Node V8 collector measures only the shipped runtime sources and enforces per-file release floors in CI.</p>
+                <p>The five-suite registry runs through <code>vanilla-test</code> 2.1.0. A shared bare-import behavioral inventory also runs unchanged in Node and real Chrome through the explicit browser import map. The native Node V8 collector measures only the shipped runtime sources and enforces per-file release floors in CI.</p>
                 <div class="metric-grid">
-                    <div><strong>1,192</strong><span>passing tests</span></div>
+                    <div><strong>1,268</strong><span>passing tests</span></div>
                     <div><strong>90.96%</strong><span>executable lines</span></div>
                     <div><strong>71.77%</strong><span>V8 block ranges</span></div>
                     <div><strong>98.80%</strong><span>function ranges</span></div>

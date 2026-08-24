@@ -1,5 +1,5 @@
-import Is from '../index.js';
-import IsNode from '../node.js';
+import Is from 'strong-type';
+import IsNode from 'strong-type/node';
 import * as vm from 'node:vm';
 import {equal,suite,test} from './harness.js';
 

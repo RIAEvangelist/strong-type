@@ -27,11 +27,15 @@ jobs:
           node-version: 24.x
       - run: npm ci
       - run: npm test
+      - run: npm run test:browser-contract
       - name: Assemble unchanged static files
         run: |
           mkdir _site
-          cp index.html reference.html testing.html playground.html index.js node.js docs.css docs.js package.json licence .nojekyll _site/
-          cp -R assets docs playground _site/
+          mkdir _site/test
+          cp index.html reference.html testing.html playground.html index.js node.js docs.css docs.js package.json CHANGELOG.md MIGRATION.md licence .nojekyll _site/
+          cp -R assets docs playground example _site/
+          cp test/browser.html test/behavioral-core.js _site/test/
+      - run: npm run test:browser-contract -- _site
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

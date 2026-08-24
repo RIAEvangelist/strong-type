@@ -94,13 +94,22 @@ console.log(is.union(new Pizza,'pizza|string'));</code></pre></div>
                 <section id="browser-module" class="doc-section">
                     <p class="section-kicker">Same pattern in your page</p>
                     <h2>A normal module script is enough.</h2>
-                    <div class="code-block"><div><span>HTML</span><button type="button" data-copy-target="browser-script-code">Copy</button></div><pre id="browser-script-code"><code>&lt;script type="module"&gt;
-    import Is from 'https://riaevangelist.github.io/strong-type/index.js';
+                    <p>strong-type works with bundlers and without a bundler. Bundlers resolve <code>strong-type</code> normally; native browser ESM uses the import map below, with no build or transpilation step.</p>
+                    <div class="code-block"><div><span>HTML</span><button type="button" data-copy-target="browser-script-code">Copy</button></div><pre id="browser-script-code"><code>&lt;script type="importmap"&gt;
+{
+    "imports": {
+        "strong-type": "./node_modules/strong-type/index.js"
+    }
+}
+&lt;/script&gt;
+
+&lt;script type="module"&gt;
+    import Is from 'strong-type';
 
     const is=new Is(false);
     document.body.dataset.valid=String(is.string('strong-type'));
 &lt;/script&gt;</code></pre></div>
-                    <p>For local development, run <code>npm start</code> and open <code>http://localhost:8000/playground.html</code>.</p>
+                    <p>The mapped path is relative to the HTML document. Serve the app over HTTP(S), configure the server to expose the mapped <code>node_modules</code> file, and do not use <code>file://</code>. There are no runtime dependency mappings or scopes to add. For this checkout’s live playground, run <code>npm start</code> and open <code>http://localhost:8000/playground.html</code>.</p>
                 </section>
             </div>
         </main>

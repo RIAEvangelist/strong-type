@@ -1,9 +1,19 @@
-<html>
+<!doctype html>
+<html lang="en">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>
             strong-type support example for browser
         </title>
-        <script async type="module" src='./typecheck.js'></script>
+        <script type="importmap">
+            {
+                "imports": {
+                    "strong-type": "../../index.js"
+                }
+            }
+        </script>
+        <script type="module" src="./typecheck.js"></script>
         <style>
             .true{
                 background-color: green;
@@ -21,6 +31,7 @@
         </style>
     </head>
     <body>
+        <p>strong-type works with bundlers and without a bundler. Bundlers resolve the bare <code>strong-type</code> import normally; this checkout example uses native browser ESM and an explicit import map with no build or transpilation step. Serve it over HTTP(S); the mapped path is relative to this document, the server must expose it, and <code>file://</code> is unsupported.</p>
         <template id='supported'>
             <tr class='${supported}'>
                 <td>
